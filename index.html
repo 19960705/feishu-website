@@ -347,7 +347,7 @@
                 card.innerHTML = `
                     <div class="video-wrapper loading-shimmer" id="wrapper-${fileToken}">
                         <!-- Video element placeholder -->
-                        <video loop playsinline controlsList="nodownload" preload="none" data-token="${fileToken}"></video>
+                        <video loop playsinline controlsList="nodownload" preload="metadata" data-token="${fileToken}"></video>
                         <div class="play-indicator"></div>
                     </div>
                     <div class="card-content">
@@ -410,7 +410,8 @@
             document.querySelectorAll('video[data-token]').forEach(vid => {
                 const token = vid.getAttribute('data-token');
                 if (linkData[token]) {
-                    vid.src = linkData[token];
+                    // Append #t=0.001 to force browser to load the first frame as poster
+                    vid.src = linkData[token] + '#t=0.001';
                     vid.parentElement.classList.remove('loading-shimmer'); // remove loading state
                 }
             });
