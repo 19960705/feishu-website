@@ -1,10 +1,10 @@
 import json
-import subprocess
 import os
 import urllib.request
+import urllib.parse
 
+APP_TOKEN = "PDk1bzTduaoYTmsmnqWcIp7BnS4"
 TABLE_ID = "tblLPKUMFfUdMe3Y"
-DATA_FILE = "feishu_data.json"
 OUTPUT_FILE = os.path.join("api", "videos.json")
 
 def get_tenant_token(app_id, app_secret):
@@ -22,18 +22,43 @@ def get_tenant_token(app_id, app_secret):
         print(f"Auth request exception: {e}")
     return None
 
-def fetch_with_api(token, batch):
+def get_bitable_records(token):
+    url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{APP_TOKEN}/tables/{TABLE_ID}/records"
+    req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+    all_records = []
+    has_more = True
+    page_token = ""
+    
+    while has_more:
+        try:
+            page_url = url
+            if page_token:
+                page_url += f"?page_token={page_token}"
+            req = urllib.request.Request(page_url, headers={"Authorization": f"Bearer {token}"})
+            with urllib.request.urlopen(req) as response:
+                res = json.loads(response.read())
+                if res.get("code") == 0:
+                    data = res.get("data", {})
+                    all_records.extend(data.get("items", []))
+                    has_more = data.get("has_more", False)
+                    page_token = data.get("page_token", "")
+                else:
+                    print(f"Failed to fetch records: {res}")
+                    break
+        except Exception as e:
+            print(f"Bitable API exception: {e}")
+            break
+    return all_records
+
+def fetch_media_urls(token, batch):
     url = "https://open.feishu.cn/open-apis/drive/v1/medias/batch_get_tmp_download_url"
     extra_json = json.dumps({"bitablePerm": {"tableId": TABLE_ID}})
-    
-    # Construct query params
     params = f"extra={urllib.parse.quote(extra_json)}"
     for t in batch:
         params += f"&file_tokens={t}"
         
     full_url = f"{url}?{params}"
     req = urllib.request.Request(full_url, headers={"Authorization": f"Bearer {token}"})
-    
     try:
         with urllib.request.urlopen(req) as response:
             res = json.loads(response.read())
@@ -43,82 +68,75 @@ def fetch_with_api(token, batch):
     return None
 
 def main():
-    print("Loading feishu_data.json...")
-    try:
-        with open(DATA_FILE, "r", encoding="utf-8-sig") as f:
-            data = json.load(f)
-    except Exception as e:
-        print(f"Failed to load data: {e}")
-        return
-
-    tokens = []
-    rows = data.get("data", {}).get("data", [])
-    for row in rows:
-        if len(row) > 3:
-            attachments = row[3]
-            if isinstance(attachments, list) and len(attachments) > 0:
-                tokens.append(attachments[0].get("file_token"))
-
-    tokens = [t for t in tokens if t]
-    print(f"Found {len(tokens)} video tokens.")
-    if not tokens:
-        return
-
-    # Check if we are running in CI (GitHub Actions)
     app_id = os.environ.get("LARK_APP_ID")
     app_secret = os.environ.get("LARK_APP_SECRET")
-    tenant_token = None
     
-    if app_id and app_secret:
-        print("CI environment detected: Authenticating via Feishu OpenAPI...")
-        tenant_token = get_tenant_token(app_id, app_secret)
-        if not tenant_token:
-            print("Could not obtain tenant access token. Aborting.")
-            return
-    else:
-        print("Local environment detected: Falling back to lark-cli...")
-
-    mapped_urls = {}
-    
-    # Process in batches of 5
-    for i in range(0, len(tokens), 5):
-        batch = tokens[i:i+5]
-        print(f"Fetching batch {i//5 + 1}...")
+    if not app_id or not app_secret:
+        print("Missing GitHub Secrets LARK_APP_ID / LARK_APP_SECRET! Please configure them.")
+        return
         
-        if tenant_token:
-            import urllib.parse
-            response_data = fetch_with_api(tenant_token, batch)
-        else:
-            # Fallback to local lark-cli command
-            extra_json = json.dumps({"bitablePerm": {"tableId": TABLE_ID}})
-            params_dict = {"file_tokens": batch, "extra": extra_json}
-            
-            cmd = ["npx.cmd", "lark-cli", "api", "GET", "/open-apis/drive/v1/medias/batch_get_tmp_download_url", "--params", json.dumps(params_dict)]
-            
-            try:
-                res = subprocess.run(cmd, capture_output=True, text=True, encoding='utf-8')
-                if res.returncode != 0:
-                    print(f"Command failed:\n{res.stderr}")
-                    continue
-                out = res.stdout.strip()
-                if not out: continue
-                response_data = json.loads(out)
-            except Exception as e:
-                print(f"Subprocess Exception: {e}")
-                continue
+    print("Authenticating...")
+    tenant_token = get_tenant_token(app_id, app_secret)
+    if not tenant_token:
+        print("Could not obtain tenant access token. Aborting.")
+        return
 
-        if response_data and (response_data.get("code") == 0 or response_data.get("ok")):
+    print("Fetching live records from Bitable...")
+    records = get_bitable_records(tenant_token)
+    print(f"Found {len(records)} records in Bitable.")
+
+    # Sort records by custom field '序号' if you like, or leave as is
+    def get_order(record):
+        try:
+            return float(record.get('fields', {}).get('序号', 0))
+        except:
+            return 0
+    records.sort(key=get_order)
+
+    # Collect tokens
+    tokens_to_fetch = []
+    for r in records:
+        fields = r.get("fields", {})
+        attachments = fields.get("样片", [])
+        if attachments and isinstance(attachments, list) and len(attachments) > 0:
+            tokens_to_fetch.append(attachments[0].get("file_token"))
+            
+    print(f"Found {len(tokens_to_fetch)} video tokens to resolve.")
+    
+    # Resolve tokens
+    mapped_urls = {}
+    for i in range(0, len(tokens_to_fetch), 5):
+        batch = tokens_to_fetch[i:i+5]
+        print(f"Fetching batch {i//5 + 1}...")
+        response_data = fetch_media_urls(tenant_token, batch)
+        if response_data and response_data.get("code") == 0:
             tmp_urls = response_data.get("data", {}).get("tmp_download_urls", [])
             for item in tmp_urls:
                 mapped_urls[item["file_token"]] = item["tmp_download_url"]
-        else:
-            print(f"API Error in batch {i//5 + 1}: {response_data}")
+
+    # Build final formatted JSON array for frontend
+    final_output = []
+    for r in records:
+        fields = r.get("fields", {})
+        attachments = fields.get("样片", [])
+        if attachments and isinstance(attachments, list) and len(attachments) > 0:
+            token = attachments[0].get("file_token")
+            # Only add if we successfully resolved the URL
+            if token in mapped_urls:
+                final_output.append({
+                    "内容": fields.get("内容", ""),
+                    "序号": get_order(r),
+                    "类型": fields.get("类型", []),
+                    "时长": fields.get("时长", ""),
+                    "AI工具": fields.get("AI工具", ""),
+                    "URL": mapped_urls[token]
+                })
 
     os.makedirs("api", exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(mapped_urls, f, indent=2)
+        json.dump(final_output, f, indent=2, ensure_ascii=False)
         
-    print(f"Successfully mapped {len(mapped_urls)} videos to api/videos.json!")
+    print(f"Successfully generated full mapped datastore with {len(final_output)} items to api/videos.json!")
 
 if __name__ == "__main__":
     main()
