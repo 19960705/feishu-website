@@ -1,0 +1,91 @@
+﻿{
+  "ok": true,
+  "identity": "user",
+  "data": {
+    "data": [
+      [
+        "veo3",
+        "绍菜",
+        10,
+        [
+          {
+            "file_token": "CnA8bb4WOoqYTTxsiLscr2x4nse",
+            "name": "1.绍菜.mp4"
+          }
+        ],
+        [
+          "创意动画"
+        ],
+        "7秒"
+      ],
+      [
+        "veo3",
+        "芥菜",
+        20,
+        [
+          {
+            "file_token": "RUATbOFF7oNybSxDnh5cryhNnnc",
+            "name": "2.芥菜.mp4"
+          }
+        ],
+        [
+          "创意动画"
+        ],
+        "7秒"
+      ],
+      [
+        "veo3",
+        "苋菜",
+        30,
+        [
+          {
+            "file_token": "OfEpb81BIoaoQxxeRrocITE7nre",
+            "name": "3.苋菜.mp4"
+          }
+        ],
+        [
+          "创意动画"
+        ],
+        "7秒"
+      ],
+      [
+        "veo3.1",
+        "毛瓜",
+        40,
+        [
+          {
+            "file_token": "LILBbaObuo9ABOxrfIHcMDxMnLe",
+            "name": "4.毛瓜.mp4"
+          }
+        ],
+        [
+          "创意动画"
+        ],
+        "7秒"
+      ]
+    ],
+    "field_id_list": [
+      "fldRyuz0Ei",
+      "flddIMurBq",
+      "fldTfOLs3f",
+      "fld5fEqoFL",
+      "fld9raWOdo",
+      "fld1F6IRAf"
+    ],
+    "fields": [
+      "AI工具",
+      "内容",
+      "序号",
+      "样片",
+      "类型",
+      "时长"
+    ],
+    "has_more": false,
+    "record_id_list": [
+      "recvg0znqcvkMW",
+      "recvg0zYX1US85",
+      "recvg0A5TSlB2u",
+      "recvg0ARiy1GEp"
+    ]
+  }
+}

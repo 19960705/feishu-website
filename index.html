@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 视频作品集 | 岳影空间</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Aesop inspired warm, earthy palette */
+            --bg-color: #F9F7F3;
+            --text-primary: #2C2A28;
+            --text-secondary: #5C5855;
+            --accent-color: #A38C75;
+            --tag-bg: #EAE5DE;
+            --card-bg: #FFFFFF;
+            
+            --font-serif: 'Playfair Display', 'Noto Serif SC', Georgia, serif;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 4rem;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: var(--font-serif);
+            font-weight: 400;
+        }
+
+        header {
+            padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-md);
+        }
+
+        header p {
+            font-family: var(--font-serif);
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* Filter Tabs */
+        .filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            padding: 0 var(--spacing-lg);
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--text-primary);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        /* Masonry Layout */
+        .portfolio-container {
+            column-count: 4;
+            column-gap: var(--spacing-md);
+            padding: 0 var(--spacing-lg) var(--spacing-xl);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 1200px) {
+            .portfolio-container { column-count: 3; }
+        }
+        @media (max-width: 900px) {
+            .portfolio-container { column-count: 2; }
+        }
+        @media (max-width: 600px) {
+            .portfolio-container { column-count: 1; }
+        }
+
+        /* Video Card */
+        .video-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            break-inside: avoid;
+            margin-bottom: var(--spacing-md);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: #EAE5DE;
+            aspect-ratio: 9/16; /* Default for mobile vids, could be dynamic */
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .play-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .video-card:hover .play-indicator {
+            opacity: 1;
+        }
+        
+        .video-card.playing .play-indicator {
+            opacity: 0;
+        }
+
+        .play-indicator::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 0 8px 14px;
+            border-color: transparent transparent transparent var(--text-primary);
+            margin-left: 4px;
+        }
+
+        .card-content {
+            padding: var(--spacing-md);
+        }
+
+        .card-title {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            margin: 0 0 var(--spacing-sm);
+        }
+
+        .metadata {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            background-color: var(--tag-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .loading-shimmer {
+            animation: shimmer 2s infinite linear;
+            background: linear-gradient(to right, #EAE5DE 4%, #F2EFEA 25%, #EAE5DE 36%);
+            background-size: 1000px 100%;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SELECTED WORKS</h1>
+        <p>A curated collection of visual storytelling</p>
+    </header>
+
+    <div class="filters" id="filters">
+        <button class="filter-btn active" data-filter="all">全部 (All)</button>
+        <!-- Dynamic filters injected here -->
+    </div>
+
+    <div class="portfolio-container" id="portfolio-grid">
+        <!-- Videos injected here -->
+    </div>
+
+    <script>
+        let videoData = [];
+        let linkData = {};
+        let activeVideo = null;
+
+        const embeddedFeishuData = {
+          "fields": ["AI工具", "内容", "序号", "样片", "类型", "时长"],
+          "rows": [
+            [ "veo3", "绍菜", 10, [{"file_token": "CnA8bb4WOoqYTTxsiLscr2x4nse"}], ["创意动画"], "7秒" ],
+            [ "veo3", "芥菜", 20, [{"file_token": "RUATbOFF7oNybSxDnh5cryhNnnc"}], ["创意动画"], "7秒" ],
+            [ "veo3", "苋菜", 30, [{"file_token": "OfEpb81BIoaoQxxeRrocITE7nre"}], ["创意动画"], "7秒" ],
+            [ "veo3.1", "毛瓜", 40, [{"file_token": "LILBbaObuo9ABOxrfIHcMDxMnLe"}], ["创意动画"], "7秒" ]
+          ]
+        };
+
+        async function init() {
+            try {
+                // Parse embedded feishu data
+                const rows = embeddedFeishuData.rows;
+                const fieldsConfig = embeddedFeishuData.fields;
+                
+                // Map array to object based on field index
+                videoData = rows.map(row => {
+                    let obj = {};
+                    fieldsConfig.forEach((field, index) => {
+                        obj[field] = row[index];
+                    });
+                    return obj;
+                });
+
+                // Sort by '序号'
+                videoData.sort((a, b) => (a['序号'] || 0) - (b['序号'] || 0));
+
+                // Extract unique categories (类型)
+                const categories = new Set();
+                videoData.forEach(item => {
+                    if(item['类型'] && item['类型'].length > 0) {
+                        item['类型'].forEach(cat => categories.add(cat));
+                    }
+                });
+
+                renderFilters(Array.from(categories));
+                renderGallery(videoData);
+
+                // Fetch real video URLs
+                loadRealUrls();
+
+            } catch (error) {
+                console.error("Failed to load data:", error);
+            }
+        }
+
+        function renderFilters(categories) {
+            const filterContainer = document.getElementById('filters');
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.dataset.filter = cat;
+                btn.textContent = cat;
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    filterGallery(cat);
+                });
+                filterContainer.appendChild(btn);
+            });
+            
+            // Setup "All" button
+            document.querySelector('[data-filter="all"]').addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                filterGallery('all');
+            });
+        }
+
+        function filterGallery(category) {
+            if (category === 'all') {
+                renderGallery(videoData);
+                return;
+            }
+            const filtered = videoData.filter(item => item['类型'] && item['类型'].includes(category));
+            renderGallery(filtered);
+        }
+
+        function renderGallery(items) {
+            const grid = document.getElementById('portfolio-grid');
+            grid.innerHTML = '';
+
+            items.forEach(item => {
+                // Get file_token safely
+                let fileToken = "";
+                let coverFallback = "";
+                
+                if (item['样片'] && item['样片'].length > 0) {
+                    fileToken = item['样片'][0].file_token;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.dataset.category = (item['类型'] || []).join(',');
+                
+                // Build Tags HTML
+                let tagsHtml = '';
+                if(item['类型']) {
+                    item['类型'].forEach(cat => {
+                        tagsHtml += `<span class="tag">${cat}</span>`;
+                    });
+                }
+                const aiTool = item['AI工具'] ? `<span class="tag" style="background:#5C5855;color:#fff;">${item['AI工具']}</span>` : '';
+
+                card.innerHTML = `
+                    <div class="video-wrapper loading-shimmer" id="wrapper-${fileToken}">
+                        <!-- Video element placeholder -->
+                        <video loop playsinline controlsList="nodownload" preload="none" data-token="${fileToken}"></video>
+                        <div class="play-indicator"></div>
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">${item['内容'] || 'Untitled'}</h3>
+                        <div class="metadata">
+                            <span>${item['时长'] || ''}</span>
+                        </div>
+                        <div class="tags-container">
+                            ${tagsHtml}
+                            ${aiTool}
+                        </div>
+                    </div>
+                `;
+
+                // Handle playback
+                card.addEventListener('click', () => {
+                    const video = card.querySelector('video');
+                    if (!video.src) return; // Not loaded yet
+                    
+                    if (video.paused) {
+                        // Pause others
+                        if (activeVideo && activeVideo !== video) {
+                            activeVideo.pause();
+                            activeVideo.closest('.video-card').classList.remove('playing');
+                        }
+                        video.play();
+                        card.classList.add('playing');
+                        activeVideo = video;
+                    } else {
+                        video.pause();
+                        card.classList.remove('playing');
+                        activeVideo = null;
+                    }
+                });
+
+                grid.appendChild(card);
+            });
+            
+            // Sync URLs if they are already loaded
+            if (Object.keys(linkData).length > 0) {
+                applyUrls();
+            }
+        }
+
+        async function loadRealUrls() {
+            try {
+                const response = await fetch('./api/videos.json');
+                if (response.ok) {
+                    linkData = await response.json();
+                    applyUrls();
+                } else {
+                    console.log("No videos.json found yet, waiting for Python script.");
+                }
+            } catch (e) {
+                console.log("Videos mapped file not found locally. Ensure step 7 automation runs.");
+            }
+        }
+
+        function applyUrls() {
+            document.querySelectorAll('video[data-token]').forEach(vid => {
+                const token = vid.getAttribute('data-token');
+                if (linkData[token]) {
+                    vid.src = linkData[token];
+                    vid.parentElement.classList.remove('loading-shimmer'); // remove loading state
+                }
+            });
+        }
+
+        // Run
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
