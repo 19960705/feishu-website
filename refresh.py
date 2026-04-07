@@ -3,8 +3,8 @@ import os
 import urllib.request
 import urllib.parse
 
-APP_TOKEN = os.environ.get("LARK_BASE_TOKEN")
-TABLE_ID = os.environ.get("LARK_TABLE_ID")
+APP_TOKEN = os.environ.get("LARK_BASE_TOKEN", "").strip()
+TABLE_ID = os.environ.get("LARK_TABLE_ID", "").strip()
 OUTPUT_FILE = os.path.join("api", "videos.json")
 
 def get_tenant_token(app_id, app_secret):
@@ -18,13 +18,14 @@ def get_tenant_token(app_id, app_secret):
                 return res.get("tenant_access_token")
             else:
                 print(f"Failed to get tenant token: {res}")
+    except urllib.error.HTTPError as e:
+        print(f"Auth request exception: HTTP {e.code} - {e.read().decode('utf-8')}")
     except Exception as e:
         print(f"Auth request exception: {e}")
     return None
 
 def get_bitable_records(token):
     url = f"https://open.feishu.cn/open-apis/bitable/v1/apps/{APP_TOKEN}/tables/{TABLE_ID}/records"
-    req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
     all_records = []
     has_more = True
     page_token = ""
@@ -45,6 +46,9 @@ def get_bitable_records(token):
                 else:
                     print(f"Failed to fetch records: {res}")
                     break
+        except urllib.error.HTTPError as e:
+            print(f"Bitable API exception: HTTP {e.code} - {e.read().decode('utf-8')}")
+            break
         except Exception as e:
             print(f"Bitable API exception: {e}")
             break
@@ -63,6 +67,8 @@ def fetch_media_urls(token, batch):
         with urllib.request.urlopen(req) as response:
             res = json.loads(response.read())
             return res
+    except urllib.error.HTTPError as e:
+        print(f"Failed to fetch URLs: HTTP {e.code} - {e.read().decode('utf-8')}")
     except Exception as e:
         print(f"Failed to fetch URLs: {e}")
     return None
