@@ -397,40 +397,51 @@
                     video.src = item['URL'] + '#t=0.001';
                 }
 
-                // Handle playback
-                card.addEventListener('click', () => {
+                // 监听原生 play / pause 事件，以保证任何途径触发的播放暂停都能同步 UI 状态
+                video.addEventListener('play', () => {
+                    if (activeVideo && activeVideo !== video) {
+                        activeVideo.pause(); // 将触发该前视频的 pause 事件，自动移除 playing 类
+                    }
+                    card.classList.add('playing');
+                    activeVideo = video;
+                });
+
+                video.addEventListener('pause', () => {
+                    card.classList.remove('playing');
+                    if (activeVideo === video) {
+                        activeVideo = null;
+                    }
+                });
+
+                // 为视频元素单独添加点击事件，解决全屏下点击卡片容器无效的问题
+                video.addEventListener('click', (e) => {
                     if (!video.src) return;
-                    
                     if (video.paused) {
-                        // Pause others
-                        if (activeVideo && activeVideo !== video) {
-                            activeVideo.pause();
-                            activeVideo.closest('.video-card').classList.remove('playing');
-                        }
                         video.play();
-                        card.classList.add('playing');
-                        activeVideo = video;
                     } else {
                         video.pause();
-                        card.classList.remove('playing');
-                        activeVideo = null;
+                    }
+                    e.stopPropagation(); // 防止冒泡触发下面的 card 点击
+                });
+
+                // 兼容卡片上非视频区域的点击
+                card.addEventListener('click', () => {
+                    if (!video.src) return;
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
                     }
                 });
 
                 // Handle fullscreen
                 fsBtn.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Avoid triggering card click (which pauses video instantly)
+                    e.stopPropagation(); // Avoid triggering card click
                     if (!video.src) return;
                     
                     // Make sure it's playing when they go fullscreen
                     if (video.paused) {
-                        if (activeVideo && activeVideo !== video) {
-                            activeVideo.pause();
-                            activeVideo.closest('.video-card').classList.remove('playing');
-                        }
                         video.play();
-                        card.classList.add('playing');
-                        activeVideo = video;
                     }
 
                     if (video.requestFullscreen) {
