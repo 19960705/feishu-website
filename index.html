@@ -528,6 +528,8 @@
         }
 
         // 全屏状态变化时动态切换原生 controls
+        let _exitingNativeFs = false; // 标志位：正在逐层退出全屏
+
         function handleFullscreenChange() {
             const fsElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
             
@@ -536,21 +538,25 @@
                 v.removeAttribute('controls');
             });
 
-            // 如果 video 元素自己进入了全屏（用户点了原生全屏按钮），链式退出所有全屏层级
+            // 情况1: video 元素自己进入了全屏（用户点了原生全屏按钮）
+            // 设置标志位，先退出 video 的全屏
             if (fsElement && fsElement.tagName === 'VIDEO') {
-                const exitFs = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
-                if (exitFs) {
-                    // 先退出 video 的全屏，再退出 wrapper 的全屏
-                    document.exitFullscreen().then(() => {
-                        if (document.fullscreenElement) {
-                            return document.exitFullscreen();
-                        }
-                    }).catch(() => {});
-                }
+                _exitingNativeFs = true;
+                document.exitFullscreen();
                 return;
             }
 
-            // wrapper 全屏时，给 video 加上 controls（进度条、音量、全屏退出按钮都保留）
+            // 情况2: video 全屏已退出，但 wrapper 全屏还在，继续退出
+            if (_exitingNativeFs && fsElement && fsElement.classList.contains('video-wrapper')) {
+                _exitingNativeFs = false;
+                document.exitFullscreen();
+                return;
+            }
+
+            // 清除标志位
+            _exitingNativeFs = false;
+
+            // 正常情况: wrapper 全屏时，给 video 加上 controls
             if (fsElement && fsElement.classList.contains('video-wrapper')) {
                 const video = fsElement.querySelector('video');
                 if (video) {
