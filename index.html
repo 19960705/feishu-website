@@ -531,18 +531,26 @@
         function handleFullscreenChange() {
             const fsElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
             
-            // 移除所有视频的 controls 和 nofullscreen
+            // 移除所有视频的 controls
             document.querySelectorAll('video').forEach(v => {
                 v.removeAttribute('controls');
-                v.setAttribute('controlsList', 'nodownload');
             });
 
-            // 全屏的 wrapper 内的 video 加上 controls，并隐藏原生全屏按钮（用我们自己的退出按钮）
+            // 如果 video 元素自己进入了全屏（用户点了原生全屏按钮），退出所有全屏
+            if (fsElement && fsElement.tagName === 'VIDEO') {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+                return;
+            }
+
+            // wrapper 全屏时，给 video 加上 controls（进度条、音量、全屏退出按钮都保留）
             if (fsElement && fsElement.classList.contains('video-wrapper')) {
                 const video = fsElement.querySelector('video');
                 if (video) {
                     video.setAttribute('controls', 'true');
-                    video.setAttribute('controlsList', 'nodownload nofullscreen');
                 }
             }
         }
