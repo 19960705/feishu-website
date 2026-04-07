@@ -536,12 +536,16 @@
                 v.removeAttribute('controls');
             });
 
-            // 如果 video 元素自己进入了全屏（用户点了原生全屏按钮），退出所有全屏
+            // 如果 video 元素自己进入了全屏（用户点了原生全屏按钮），链式退出所有全屏层级
             if (fsElement && fsElement.tagName === 'VIDEO') {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
+                const exitFs = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+                if (exitFs) {
+                    // 先退出 video 的全屏，再退出 wrapper 的全屏
+                    document.exitFullscreen().then(() => {
+                        if (document.fullscreenElement) {
+                            return document.exitFullscreen();
+                        }
+                    }).catch(() => {});
                 }
                 return;
             }
