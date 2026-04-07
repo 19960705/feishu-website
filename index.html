@@ -130,61 +130,6 @@
             background-color: #EAE5DE;
         }
 
-        /* Fullscreen styles for custom wrapper */
-        .video-wrapper:fullscreen {
-            background-color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-wrapper:-webkit-full-screen {
-            background-color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .video-wrapper:fullscreen video,
-        .video-wrapper:-webkit-full-screen video {
-            width: 100%;
-            height: 100%;
-            max-height: 100vh;
-            object-fit: contain;
-        }
-        .video-wrapper:fullscreen .fullscreen-btn,
-        .video-wrapper:-webkit-full-screen .fullscreen-btn {
-            opacity: 1;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            bottom: auto;
-            width: 44px;
-            height: 44px;
-            background-color: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 50%;
-            z-index: 100;
-        }
-        .video-wrapper:fullscreen .fullscreen-btn:hover,
-        .video-wrapper:-webkit-full-screen .fullscreen-btn:hover {
-            background-color: rgba(255, 255, 255, 0.35);
-        }
-
-        .click-catcher {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 75%; /* 留出底部 25% 空间给原生控制条 */
-            z-index: 5;
-            cursor: pointer;
-        }
-
-        .video-wrapper:fullscreen .click-catcher,
-        .video-wrapper:-webkit-full-screen .click-catcher {
-            display: block;
-        }
 
         video {
             width: 100%;
@@ -428,7 +373,6 @@
                     <div class="video-wrapper">
                         <!-- Video element -->
                         <video loop playsinline controlsList="nodownload" preload="metadata"></video>
-                        <div class="click-catcher"></div>
                         <div class="play-indicator"></div>
                         <button class="fullscreen-btn" aria-label="全屏播放" title="全屏观看">
                             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
@@ -470,30 +414,7 @@
                     }
                 });
 
-                // 为视频元素单独添加点击事件，解决全屏下点击卡片容器无效的问题
-                video.addEventListener('click', (e) => {
-                    if (!video.src) return;
-                    if (video.paused) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
-                    e.stopPropagation(); // 防止冒泡触发下面的 card 点击
-                });
-
-                // 全屏时的透明遮罩点击事件（保证全屏时点击画面上方也能暂停/播放，又不会被原生控制条吃掉事件）
-                const catcher = card.querySelector('.click-catcher');
-                catcher.addEventListener('click', (e) => {
-                    if (!video.src) return;
-                    if (video.paused) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
-                    e.stopPropagation();
-                });
-
-                // 兼容卡片上非视频区域的点击
+                // 卡片点击切换播放/暂停
                 card.addEventListener('click', () => {
                     if (!video.src) return;
                     if (video.paused) {
@@ -503,35 +424,23 @@
                     }
                 });
 
-                // Handle fullscreen toggle
+                // 全屏按钮：直接全屏 video 元素，原生控制条的所有按钮都能正常工作
                 fsBtn.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Avoid triggering card click
+                    e.stopPropagation();
                     if (!video.src) return;
-
-                    const fsElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
                     
-                    if (fsElement) {
-                        // Already in fullscreen — exit
-                        if (document.exitFullscreen) {
-                            document.exitFullscreen();
-                        } else if (document.webkitExitFullscreen) {
-                            document.webkitExitFullscreen();
-                        } else if (document.msExitFullscreen) {
-                            document.msExitFullscreen();
-                        }
-                    } else {
-                        // Enter fullscreen
-                        if (video.paused) {
-                            video.play();
-                        }
-                        const wrapper = card.querySelector('.video-wrapper');
-                        if (wrapper.requestFullscreen) {
-                            wrapper.requestFullscreen();
-                        } else if (wrapper.webkitRequestFullscreen) {
-                            wrapper.webkitRequestFullscreen();
-                        } else if (wrapper.msRequestFullscreen) {
-                            wrapper.msRequestFullscreen();
-                        }
+                    if (video.paused) {
+                        video.play();
+                    }
+
+                    if (video.requestFullscreen) {
+                        video.requestFullscreen();
+                    } else if (video.webkitRequestFullscreen) {
+                        video.webkitRequestFullscreen();
+                    } else if (video.webkitEnterFullscreen) { /* iOS Safari */
+                        video.webkitEnterFullscreen();
+                    } else if (video.msRequestFullscreen) {
+                        video.msRequestFullscreen();
                     }
                 });
 
@@ -539,21 +448,18 @@
             });
         }
 
-        // Handle global fullscreen changes to dynamically toggle native controls
+        // 全屏状态变化时动态切换原生 controls
         function handleFullscreenChange() {
             const fsElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
             
-            // Turn off controls for all videos first, just to be safe
+            // 移除所有视频的 controls
             document.querySelectorAll('video').forEach(v => {
                 v.removeAttribute('controls');
             });
 
-            // If we are in fullscreen, find the video inside the full-screened wrapper and add controls
-            if (fsElement && fsElement.classList.contains('video-wrapper')) {
-                const video = fsElement.querySelector('video');
-                if (video) {
-                    video.setAttribute('controls', 'true');
-                }
+            // 全屏的视频元素加上 controls（显示进度条、音量、全屏退出等）
+            if (fsElement && fsElement.tagName === 'VIDEO') {
+                fsElement.setAttribute('controls', 'true');
             }
         }
         
