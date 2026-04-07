@@ -3,8 +3,8 @@ import os
 import urllib.request
 import urllib.parse
 
-APP_TOKEN = "PDk1bzTduaoYTmsmnqWcIp7BnS4"
-TABLE_ID = "tblLPKUMFfUdMe3Y"
+APP_TOKEN = os.environ.get("LARK_BASE_TOKEN")
+TABLE_ID = os.environ.get("LARK_TABLE_ID")
 OUTPUT_FILE = os.path.join("api", "videos.json")
 
 def get_tenant_token(app_id, app_secret):
@@ -71,8 +71,8 @@ def main():
     app_id = os.environ.get("LARK_APP_ID")
     app_secret = os.environ.get("LARK_APP_SECRET")
     
-    if not app_id or not app_secret:
-        print("Missing GitHub Secrets LARK_APP_ID / LARK_APP_SECRET! Please configure them.")
+    if not app_id or not app_secret or not APP_TOKEN or not TABLE_ID:
+        print("Missing GitHub Secrets! Please configure LARK_APP_ID, LARK_APP_SECRET, LARK_BASE_TOKEN, LARK_TABLE_ID.")
         return
         
     print("Authenticating...")

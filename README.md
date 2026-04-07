@@ -22,9 +22,11 @@
 3. **关键步骤**：去到你存储视频的飞书多维表格页面，点击右上角的 **分享（Share）** -> 搜索你的应用名称 -> 添加为**协作者 (可阅读)**，否则云端 API 无权抓取你个人空间下的任何图片。
 
 ### 2. 配置 GitHub 云端机密环境变量 (Secrets)
-前往当前 GitHub 仓库的 **Settings (设置)** -> **Secrets and variables** -> **Actions**，新增两个 Repository secrets：
-*   **`LARK_APP_ID`**：你的飞书应用 ID
-*   **`LARK_APP_SECRET`**：你的飞书应用 Secret
+前往当前 GitHub 仓库的 **Settings (设置)** -> **Secrets and variables** -> **Actions**，新增**四个** Repository secrets：
+*   **`LARK_APP_ID`**：你的飞书自建应用 ID
+*   **`LARK_APP_SECRET`**：你的飞书自建应用 Secret
+*   **`LARK_BASE_TOKEN`**：多维表格所在的 App Token（通常位于浏览器网址栏 `/base/` 后面的那一串代码）
+*   **`LARK_TABLE_ID`**：你需要抓取的那张子表的 Table ID（网址栏 `?table=` 后面的代码）
 
 ### 3. 上线与自动化刷新
 1. 在 Github 的 **Settings** -> **Pages** 将托管源设为 `Deploy from a branch`，并选择 `main`，至此网站正式全网公开。
