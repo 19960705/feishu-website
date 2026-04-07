@@ -152,7 +152,22 @@
         }
         .video-wrapper:fullscreen .fullscreen-btn,
         .video-wrapper:-webkit-full-screen .fullscreen-btn {
-            display: none !important;
+            opacity: 1;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            bottom: auto;
+            width: 44px;
+            height: 44px;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 50%;
+            z-index: 100;
+        }
+        .video-wrapper:fullscreen .fullscreen-btn:hover,
+        .video-wrapper:-webkit-full-screen .fullscreen-btn:hover {
+            background-color: rgba(255, 255, 255, 0.35);
         }
 
         .click-catcher {
@@ -488,23 +503,35 @@
                     }
                 });
 
-                // Handle fullscreen
+                // Handle fullscreen toggle
                 fsBtn.addEventListener('click', (e) => {
                     e.stopPropagation(); // Avoid triggering card click
                     if (!video.src) return;
-                    
-                    // Make sure it's playing when they go fullscreen
-                    if (video.paused) {
-                        video.play();
-                    }
 
-                    const wrapper = card.querySelector('.video-wrapper');
-                    if (wrapper.requestFullscreen) {
-                        wrapper.requestFullscreen();
-                    } else if (wrapper.webkitRequestFullscreen) { /* Safari */
-                        wrapper.webkitRequestFullscreen();
-                    } else if (wrapper.msRequestFullscreen) { /* IE11 */
-                        wrapper.msRequestFullscreen();
+                    const fsElement = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+                    
+                    if (fsElement) {
+                        // Already in fullscreen — exit
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        } else if (document.webkitExitFullscreen) {
+                            document.webkitExitFullscreen();
+                        } else if (document.msExitFullscreen) {
+                            document.msExitFullscreen();
+                        }
+                    } else {
+                        // Enter fullscreen
+                        if (video.paused) {
+                            video.play();
+                        }
+                        const wrapper = card.querySelector('.video-wrapper');
+                        if (wrapper.requestFullscreen) {
+                            wrapper.requestFullscreen();
+                        } else if (wrapper.webkitRequestFullscreen) {
+                            wrapper.webkitRequestFullscreen();
+                        } else if (wrapper.msRequestFullscreen) {
+                            wrapper.msRequestFullscreen();
+                        }
                     }
                 });
 
