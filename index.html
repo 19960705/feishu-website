@@ -628,45 +628,118 @@
         }
 
         .portfolio-container {
-            --lens-x: -180px;
-            --lens-y: -180px;
-            --lens-size: clamp(132px, 16vw, 210px);
+            --loupe-x: -220px;
+            --loupe-y: -220px;
+            --loupe-size: clamp(156px, 17vw, 236px);
+            --loupe-image: linear-gradient(145deg, rgba(122, 167, 183, 0.42), rgba(20, 11, 23, 0.92));
+            --loupe-focus-x: 50%;
+            --loupe-focus-y: 50%;
             position: relative;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 272px), 1fr));
             gap: clamp(14px, 2vw, 22px);
             align-items: start;
             margin: 0;
+            perspective: 1200px;
         }
 
-        .portfolio-container::before {
-            content: '';
+        .inspect-loupe {
             position: absolute;
-            left: var(--lens-x);
-            top: var(--lens-y);
-            z-index: 20;
-            width: var(--lens-size);
-            height: var(--lens-size);
-            border: 1px solid rgba(244, 239, 229, 0.36);
-            border-radius: 50%;
+            left: var(--loupe-x);
+            top: var(--loupe-y);
+            z-index: 80;
+            width: var(--loupe-size);
+            height: calc(var(--loupe-size) + 72px);
             pointer-events: none;
             opacity: 0;
-            transform: translate(-50%, -50%) scale(0.72);
-            background:
-                radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.28), transparent 0 13%),
-                radial-gradient(circle, rgba(244, 239, 229, 0.2) 0 28%, rgba(122, 167, 183, 0.1) 54%, rgba(20, 11, 23, 0) 69%);
-            box-shadow:
-                inset 0 0 0 1px rgba(20, 11, 23, 0.2),
-                inset 0 0 28px rgba(244, 239, 229, 0.1),
-                0 18px 48px rgba(0, 0, 0, 0.28);
-            backdrop-filter: saturate(1.25) contrast(1.08) brightness(1.12);
-            -webkit-backdrop-filter: saturate(1.25) contrast(1.08) brightness(1.12);
-            transition: opacity 0.22s ease, transform 0.32s var(--ease);
+            transform: translate(-50%, -50%) rotate(-10deg) scale(0.66);
+            transform-origin: 50% 42%;
+            transition: opacity 0.2s ease, transform 0.32s var(--ease);
         }
 
-        .portfolio-container.is-lensing::before {
+        .portfolio-container.is-lensing .inspect-loupe {
             opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%) rotate(-5deg) scale(1);
+        }
+
+        .loupe-glass {
+            position: relative;
+            width: var(--loupe-size);
+            height: var(--loupe-size);
+            overflow: hidden;
+            border: 2px solid rgba(244, 239, 229, 0.68);
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 32% 27%, rgba(255, 255, 255, 0.62), transparent 0 11%),
+                radial-gradient(circle at 50% 50%, rgba(244, 239, 229, 0.1), rgba(20, 11, 23, 0.36) 68%),
+                var(--loupe-image);
+            background-size: auto, auto, 215% 215%;
+            background-position: center, center, var(--loupe-focus-x) var(--loupe-focus-y);
+            box-shadow:
+                inset 0 0 0 8px rgba(20, 11, 23, 0.42),
+                inset 0 0 34px rgba(244, 239, 229, 0.18),
+                0 18px 48px rgba(0, 0, 0, 0.34),
+                8px 8px 0 rgba(242, 110, 59, 0.54);
+            filter: saturate(1.22) contrast(1.08);
+        }
+
+        .loupe-glass::before,
+        .loupe-glass::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .loupe-glass::before {
+            background:
+                linear-gradient(105deg, transparent 0 30%, rgba(255, 255, 255, 0.26) 38%, transparent 48% 100%),
+                repeating-linear-gradient(0deg, rgba(244, 239, 229, 0.16) 0 1px, transparent 1px 9px);
+            mix-blend-mode: screen;
+        }
+
+        .loupe-glass::after {
+            inset: 12px;
+            border: 1px solid rgba(244, 239, 229, 0.2);
+            border-radius: 50%;
+            box-shadow: inset 0 0 26px rgba(20, 11, 23, 0.5);
+        }
+
+        .loupe-handle {
+            position: absolute;
+            left: 58%;
+            top: calc(var(--loupe-size) - 13px);
+            width: clamp(28px, 3.6vw, 46px);
+            height: 88px;
+            border-radius: 999px;
+            background:
+                linear-gradient(90deg, rgba(244, 239, 229, 0.72), rgba(122, 167, 183, 0.54) 34%, rgba(20, 11, 23, 0.78)),
+                var(--card-accent, var(--wasabi));
+            border: 1px solid rgba(244, 239, 229, 0.26);
+            box-shadow: 8px 16px 28px rgba(0, 0, 0, 0.28);
+            transform: rotate(-34deg);
+            transform-origin: 50% 0;
+        }
+
+        .loupe-spark {
+            position: absolute;
+            inset: 0;
+        }
+
+        .loupe-spark i {
+            position: absolute;
+            display: block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--wasabi);
+            box-shadow: 0 0 16px var(--wasabi);
+            opacity: 0.86;
+        }
+
+        .loupe-spark i:nth-child(1) { top: 12%; left: 4%; }
+        .loupe-spark i:nth-child(2) { top: 31%; right: 1%; background: var(--cool-blue); box-shadow: 0 0 16px var(--cool-blue); }
+        .loupe-spark i:nth-child(3) { bottom: 21%; left: 12%; background: var(--persimmon); box-shadow: 0 0 16px var(--persimmon); }
         }
 
         .video-card {
@@ -680,7 +753,7 @@
                 var(--panel);
             border: 1px solid rgba(197, 223, 230, 0.22);
             border-radius: var(--radius-md);
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 16px 46px rgba(0, 0, 0, 0.24);
             cursor: pointer;
             transform: translateY(0);
@@ -724,17 +797,23 @@
         }
 
         .video-card:hover {
+            z-index: 30;
             transform: translateY(-7px) rotate(-0.45deg) rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
             border-color: rgba(196, 214, 77, 0.55);
             box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
         }
 
         .video-card:focus-visible {
+            z-index: 30;
             outline: 2px solid var(--card-accent, var(--wasabi));
             outline-offset: 4px;
             transform: translateY(-5px) rotateX(0deg) rotateY(0deg);
             border-color: rgba(196, 214, 77, 0.6);
             box-shadow: 0 0 0 4px rgba(20, 11, 23, 0.88), 0 28px 70px rgba(0, 0, 0, 0.38);
+        }
+
+        .video-card.playing {
+            z-index: 30;
         }
 
         .video-card.is-cued {
@@ -755,48 +834,147 @@
             background:
                 repeating-linear-gradient(90deg, rgba(244, 239, 229, 0.07) 0 1px, transparent 1px 13px),
                 linear-gradient(145deg, rgba(122, 167, 183, 0.2), rgba(20, 11, 23, 0.88));
+            border-radius: calc(var(--radius-md) - 1px) calc(var(--radius-md) - 1px) 0 0;
             overflow: hidden;
         }
 
-        .paper-corner {
+        .paper-burst {
             position: absolute;
+            top: -18px;
+            right: -18px;
+            z-index: 18;
+            width: 186px;
+            height: 142px;
+            pointer-events: none;
+            filter: drop-shadow(-14px 18px 18px rgba(0, 0, 0, 0.24));
+        }
+
+        .paper-crumple,
+        .paper-scrap {
+            position: absolute;
+            pointer-events: none;
+            transition: transform 0.58s var(--ease), opacity 0.36s ease, filter 0.36s ease;
+        }
+
+        .paper-crumple {
             top: 0;
             right: 0;
-            z-index: 8;
-            width: 56px;
-            height: 56px;
-            pointer-events: none;
-            transform-origin: 100% 0;
-            transform: translate(17px, -17px) rotate(0deg);
-            transition: transform 0.42s var(--ease), filter 0.42s ease;
-            filter: drop-shadow(-8px 10px 12px rgba(0, 0, 0, 0.16));
+            width: 54px;
+            height: 54px;
+            border: 1px solid rgba(244, 239, 229, 0.34);
+            border-radius: 44% 56% 45% 58%;
+            background:
+                radial-gradient(circle at 32% 30%, rgba(255, 255, 255, 0.72), transparent 0 14%),
+                repeating-linear-gradient(132deg, rgba(20, 11, 23, 0.17) 0 1px, transparent 1px 8px),
+                linear-gradient(135deg, rgba(244, 239, 229, 0.9), rgba(197, 223, 230, 0.64) 52%, rgba(242, 110, 59, 0.2)),
+                var(--card-accent, var(--wasabi));
+            transform: translate(8px, -8px) rotate(24deg) scale(0.78);
+            box-shadow: inset -8px -8px 18px rgba(20, 11, 23, 0.16);
+            opacity: 0.96;
         }
 
-        .paper-corner::before,
-        .paper-corner::after {
+        .paper-scrap {
+            border: 1px solid rgba(244, 239, 229, 0.22);
+            border-radius: 5px 9px 4px 10px;
+            opacity: 0;
+            background:
+                linear-gradient(115deg, rgba(255, 255, 255, 0.74), rgba(244, 239, 229, 0.5) 42%, rgba(20, 11, 23, 0.2)),
+                var(--card-accent, var(--wasabi));
+            box-shadow: inset 0 -13px 18px rgba(20, 11, 23, 0.14);
+        }
+
+        .paper-scrap::before,
+        .paper-scrap::after {
             content: '';
             position: absolute;
-            inset: 0;
-            clip-path: polygon(100% 0, 0 0, 100% 100%);
+            left: 10px;
+            right: 10px;
+            height: 1px;
+            border-radius: 999px;
+            background: rgba(20, 11, 23, 0.3);
         }
 
-        .paper-corner::before {
+        .paper-scrap::before { top: 36%; }
+        .paper-scrap::after { top: 59%; width: 52%; }
+
+        .paper-scrap.s1 {
+            top: 2px;
+            right: 12px;
+            width: 88px;
+            height: 54px;
+            clip-path: polygon(8% 8%, 98% 0, 91% 88%, 2% 100%);
+            transform: translate(30px, -18px) rotate(18deg) scale(0.18);
+        }
+
+        .paper-scrap.s2 {
+            top: 42px;
+            right: 0;
+            width: 112px;
+            height: 60px;
             background:
-                linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(197, 223, 230, 0.7) 45%, rgba(20, 11, 23, 0.18) 100%),
-                var(--card-accent, var(--wasabi));
+                linear-gradient(115deg, rgba(255, 255, 255, 0.76), rgba(197, 223, 230, 0.6), rgba(20, 11, 23, 0.18));
+            clip-path: polygon(0 10%, 88% 0, 100% 82%, 12% 100%);
+            transform: translate(38px, -26px) rotate(-18deg) scale(0.16);
         }
 
-        .paper-corner::after {
-            inset: 7px 0 0 7px;
-            opacity: 0.58;
-            background: linear-gradient(135deg, rgba(20, 11, 23, 0), rgba(20, 11, 23, 0.5));
+        .paper-scrap.s3 {
+            top: 64px;
+            right: 74px;
+            width: 74px;
+            height: 52px;
+            background:
+                linear-gradient(115deg, rgba(255, 255, 255, 0.74), rgba(242, 110, 59, 0.42), rgba(20, 11, 23, 0.16));
+            clip-path: polygon(14% 0, 100% 16%, 86% 94%, 0 78%);
+            transform: translate(42px, -42px) rotate(22deg) scale(0.16);
         }
 
-        .video-card:hover .paper-corner,
-        .video-card:focus-visible .paper-corner,
-        .video-card.playing .paper-corner {
-            transform: translate(0, 0) rotate(-2deg);
-            filter: drop-shadow(-12px 14px 16px rgba(0, 0, 0, 0.22));
+        .paper-scrap.s4 {
+            top: 18px;
+            right: 98px;
+            width: 56px;
+            height: 74px;
+            background:
+                linear-gradient(125deg, rgba(255, 255, 255, 0.72), rgba(196, 214, 77, 0.48), rgba(20, 11, 23, 0.2));
+            clip-path: polygon(20% 0, 94% 9%, 100% 100%, 4% 88%);
+            transform: translate(48px, -18px) rotate(-28deg) scale(0.14);
+        }
+
+        .video-card:hover .paper-crumple,
+        .video-card:focus-visible .paper-crumple,
+        .video-card.playing .paper-crumple {
+            transform: translate(58px, -34px) rotate(46deg) scale(0.34);
+            opacity: 0.42;
+            filter: blur(0.2px);
+        }
+
+        .video-card:hover .paper-scrap,
+        .video-card:focus-visible .paper-scrap,
+        .video-card.playing .paper-scrap {
+            opacity: 0.98;
+        }
+
+        .video-card:hover .paper-scrap.s1,
+        .video-card:focus-visible .paper-scrap.s1,
+        .video-card.playing .paper-scrap.s1 {
+            transform: translate(-12px, 14px) rotate(-13deg) scale(1);
+        }
+
+        .video-card:hover .paper-scrap.s2,
+        .video-card:focus-visible .paper-scrap.s2,
+        .video-card.playing .paper-scrap.s2 {
+            transform: translate(-6px, 22px) rotate(8deg) scale(1);
+        }
+
+        .video-card:hover .paper-scrap.s3,
+        .video-card:focus-visible .paper-scrap.s3,
+        .video-card.playing .paper-scrap.s3 {
+            transform: translate(-24px, -2px) rotate(16deg) scale(1);
+        }
+
+        .video-card:hover .paper-scrap.s4,
+        .video-card:focus-visible .paper-scrap.s4,
+        .video-card.playing .paper-scrap.s4 {
+            transform: translate(-28px, 6px) rotate(-21deg) scale(1);
         }
 
         .card-number {
@@ -1299,7 +1477,7 @@
         }
 
         @media (hover: none), (pointer: coarse) {
-            .portfolio-container::before {
+            .inspect-loupe {
                 display: none;
             }
 
@@ -1307,8 +1485,8 @@
                 transform: translateY(0);
             }
 
-            .paper-corner {
-                transform: translate(8px, -8px);
+            .paper-burst {
+                display: none;
             }
         }
 
@@ -1322,8 +1500,8 @@
                 transition-duration: 0.01ms !important;
             }
 
-            .portfolio-container::before,
-            .paper-corner {
+            .inspect-loupe,
+            .paper-burst {
                 display: none;
             }
         }
@@ -1613,16 +1791,56 @@
             }
         }
 
+        function cssUrl(value) {
+            const escaped = String(value || '')
+                .replace(/\\/g, '\\\\')
+                .replace(/"/g, '\\"');
+            return escaped ? `url("${escaped}")` : '';
+        }
+
         function setupPortfolioLens(grid) {
-            if (!grid || grid.dataset.lensReady) return;
+            if (!grid) return;
+
+            let loupe = grid.querySelector('.inspect-loupe');
+            if (!loupe) {
+                loupe = document.createElement('div');
+                loupe.className = 'inspect-loupe';
+                loupe.setAttribute('aria-hidden', 'true');
+                loupe.innerHTML = `
+                    <div class="loupe-glass"></div>
+                    <div class="loupe-handle"></div>
+                    <div class="loupe-spark"><i></i><i></i><i></i></div>
+                `;
+                grid.appendChild(loupe);
+            }
+
+            if (grid.dataset.lensReady) return;
             grid.dataset.lensReady = 'true';
 
             const canHover = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
             const moveLens = (e) => {
                 if (!canHover()) return;
+                const card = e.target.closest('.video-card');
+                if (!card) {
+                    grid.classList.remove('is-lensing');
+                    return;
+                }
                 const rect = grid.getBoundingClientRect();
-                grid.style.setProperty('--lens-x', `${Math.round(e.clientX - rect.left)}px`);
-                grid.style.setProperty('--lens-y', `${Math.round(e.clientY - rect.top)}px`);
+                const cardRect = card.getBoundingClientRect();
+                const focusX = Math.max(0, Math.min(100, ((e.clientX - cardRect.left) / cardRect.width) * 100));
+                const focusY = Math.max(0, Math.min(100, ((e.clientY - cardRect.top) / cardRect.height) * 100));
+
+                if (card.dataset.cover) {
+                    grid.style.setProperty('--loupe-image', cssUrl(card.dataset.cover));
+                }
+                const accent = getComputedStyle(card).getPropertyValue('--card-accent').trim();
+                if (accent) {
+                    grid.style.setProperty('--card-accent', accent);
+                }
+                grid.style.setProperty('--loupe-x', `${Math.round(e.clientX - rect.left)}px`);
+                grid.style.setProperty('--loupe-y', `${Math.round(e.clientY - rect.top)}px`);
+                grid.style.setProperty('--loupe-focus-x', `${focusX.toFixed(1)}%`);
+                grid.style.setProperty('--loupe-focus-y', `${focusY.toFixed(1)}%`);
                 grid.classList.add('is-lensing');
             };
 
@@ -1665,6 +1883,9 @@
                 const hasVideo = Boolean(videoUrl);
                 card.className = `video-card${hasVideo ? '' : ' image-only'}`;
                 card.id = `work-${item['序号'] || index + 1}`;
+                if (coverUrl) {
+                    card.dataset.cover = coverUrl;
+                }
                 if (hasVideo) {
                     card.tabIndex = 0;
                     card.setAttribute('role', 'button');
@@ -1675,9 +1896,15 @@
                     : `<img class="cover-image" src="${escapeHTML(coverUrl)}" alt="${escapeHTML(titleText)}">`;
 
                 card.innerHTML = `
+                    <div class="paper-burst" aria-hidden="true">
+                        <span class="paper-crumple"></span>
+                        <span class="paper-scrap s1"></span>
+                        <span class="paper-scrap s2"></span>
+                        <span class="paper-scrap s3"></span>
+                        <span class="paper-scrap s4"></span>
+                    </div>
                     <div class="video-wrapper">
                         ${mediaHtml}
-                        <div class="paper-corner" aria-hidden="true"></div>
                         <div class="card-number">${String(item['序号'] || index + 1).padStart(2, '0')}</div>
                         <div class="click-catcher"></div>
                         <div class="play-indicator"></div>
