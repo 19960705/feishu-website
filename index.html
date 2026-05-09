@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lunah / Jinny AI Motion Archive</title>
+    <link rel="icon" href="data:,">
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -627,6 +628,10 @@
         }
 
         .portfolio-container {
+            --lens-x: -180px;
+            --lens-y: -180px;
+            --lens-size: clamp(132px, 16vw, 210px);
+            position: relative;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 272px), 1fr));
             gap: clamp(14px, 2vw, 22px);
@@ -634,8 +639,41 @@
             margin: 0;
         }
 
+        .portfolio-container::before {
+            content: '';
+            position: absolute;
+            left: var(--lens-x);
+            top: var(--lens-y);
+            z-index: 20;
+            width: var(--lens-size);
+            height: var(--lens-size);
+            border: 1px solid rgba(244, 239, 229, 0.36);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.72);
+            background:
+                radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.28), transparent 0 13%),
+                radial-gradient(circle, rgba(244, 239, 229, 0.2) 0 28%, rgba(122, 167, 183, 0.1) 54%, rgba(20, 11, 23, 0) 69%);
+            box-shadow:
+                inset 0 0 0 1px rgba(20, 11, 23, 0.2),
+                inset 0 0 28px rgba(244, 239, 229, 0.1),
+                0 18px 48px rgba(0, 0, 0, 0.28);
+            backdrop-filter: saturate(1.25) contrast(1.08) brightness(1.12);
+            -webkit-backdrop-filter: saturate(1.25) contrast(1.08) brightness(1.12);
+            transition: opacity 0.22s ease, transform 0.32s var(--ease);
+        }
+
+        .portfolio-container.is-lensing::before {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
         .video-card {
+            --tilt-x: 0deg;
+            --tilt-y: 0deg;
             position: relative;
+            z-index: 1;
             min-width: 0;
             background:
                 linear-gradient(180deg, rgba(244, 239, 229, 0.1), rgba(244, 239, 229, 0.045)),
@@ -648,6 +686,7 @@
             transform: translateY(0);
             transition: transform 0.42s var(--ease), box-shadow 0.42s ease, border-color 0.42s ease;
             isolation: isolate;
+            transform-style: preserve-3d;
             animation: cardIn 0.62s var(--ease) both;
         }
 
@@ -685,9 +724,17 @@
         }
 
         .video-card:hover {
-            transform: translateY(-7px) rotate(-0.45deg);
+            transform: translateY(-7px) rotate(-0.45deg) rotateX(var(--tilt-y)) rotateY(var(--tilt-x));
             border-color: rgba(196, 214, 77, 0.55);
             box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
+        }
+
+        .video-card:focus-visible {
+            outline: 2px solid var(--card-accent, var(--wasabi));
+            outline-offset: 4px;
+            transform: translateY(-5px) rotateX(0deg) rotateY(0deg);
+            border-color: rgba(196, 214, 77, 0.6);
+            box-shadow: 0 0 0 4px rgba(20, 11, 23, 0.88), 0 28px 70px rgba(0, 0, 0, 0.38);
         }
 
         .video-card.is-cued {
@@ -695,7 +742,8 @@
             box-shadow: 0 0 0 2px rgba(244, 239, 229, 0.22), 0 28px 70px rgba(0, 0, 0, 0.38);
         }
 
-        .video-card:hover::before {
+        .video-card:hover::before,
+        .video-card:focus-visible::before {
             opacity: 1;
             transform: scale(1);
         }
@@ -708,6 +756,47 @@
                 repeating-linear-gradient(90deg, rgba(244, 239, 229, 0.07) 0 1px, transparent 1px 13px),
                 linear-gradient(145deg, rgba(122, 167, 183, 0.2), rgba(20, 11, 23, 0.88));
             overflow: hidden;
+        }
+
+        .paper-corner {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 8;
+            width: 56px;
+            height: 56px;
+            pointer-events: none;
+            transform-origin: 100% 0;
+            transform: translate(17px, -17px) rotate(0deg);
+            transition: transform 0.42s var(--ease), filter 0.42s ease;
+            filter: drop-shadow(-8px 10px 12px rgba(0, 0, 0, 0.16));
+        }
+
+        .paper-corner::before,
+        .paper-corner::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+        }
+
+        .paper-corner::before {
+            background:
+                linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(197, 223, 230, 0.7) 45%, rgba(20, 11, 23, 0.18) 100%),
+                var(--card-accent, var(--wasabi));
+        }
+
+        .paper-corner::after {
+            inset: 7px 0 0 7px;
+            opacity: 0.58;
+            background: linear-gradient(135deg, rgba(20, 11, 23, 0), rgba(20, 11, 23, 0.5));
+        }
+
+        .video-card:hover .paper-corner,
+        .video-card:focus-visible .paper-corner,
+        .video-card.playing .paper-corner {
+            transform: translate(0, 0) rotate(-2deg);
+            filter: drop-shadow(-12px 14px 16px rgba(0, 0, 0, 0.22));
         }
 
         .card-number {
@@ -792,7 +881,9 @@
         }
 
         .video-card:hover video,
-        .video-card:hover .cover-image {
+        .video-card:hover .cover-image,
+        .video-card:focus-visible video,
+        .video-card:focus-visible .cover-image {
             transform: scale(1.025);
             filter: saturate(1.18) contrast(1.07);
         }
@@ -868,7 +959,8 @@
             pointer-events: none;
         }
         
-        .video-card:hover .play-indicator {
+        .video-card:hover .play-indicator,
+        .video-card:focus-visible .play-indicator {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1.05);
         }
@@ -919,6 +1011,7 @@
         }
 
         .video-card:hover .fullscreen-btn,
+        .video-card:focus-within .fullscreen-btn,
         .video-card.playing .fullscreen-btn {
             opacity: 1;
         }
@@ -1205,6 +1298,20 @@
             }
         }
 
+        @media (hover: none), (pointer: coarse) {
+            .portfolio-container::before {
+                display: none;
+            }
+
+            .video-card:hover {
+                transform: translateY(0);
+            }
+
+            .paper-corner {
+                transform: translate(8px, -8px);
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             *,
             *::before,
@@ -1213,6 +1320,11 @@
                 animation-iteration-count: 1 !important;
                 scroll-behavior: auto !important;
                 transition-duration: 0.01ms !important;
+            }
+
+            .portfolio-container::before,
+            .paper-corner {
+                display: none;
             }
         }
 
@@ -1489,9 +1601,42 @@
             renderGallery(filtered);
         }
 
+        function toggleCardVideo(video) {
+            if (!video || !video.src) return;
+            if (video.paused) {
+                const playAttempt = video.play();
+                if (playAttempt && typeof playAttempt.catch === 'function') {
+                    playAttempt.catch(() => {});
+                }
+            } else {
+                video.pause();
+            }
+        }
+
+        function setupPortfolioLens(grid) {
+            if (!grid || grid.dataset.lensReady) return;
+            grid.dataset.lensReady = 'true';
+
+            const canHover = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+            const moveLens = (e) => {
+                if (!canHover()) return;
+                const rect = grid.getBoundingClientRect();
+                grid.style.setProperty('--lens-x', `${Math.round(e.clientX - rect.left)}px`);
+                grid.style.setProperty('--lens-y', `${Math.round(e.clientY - rect.top)}px`);
+                grid.classList.add('is-lensing');
+            };
+
+            grid.addEventListener('pointerenter', moveLens);
+            grid.addEventListener('pointermove', moveLens);
+            grid.addEventListener('pointerleave', () => {
+                grid.classList.remove('is-lensing');
+            });
+        }
+
         function renderGallery(items) {
             const grid = document.getElementById('portfolio-grid');
             grid.innerHTML = '';
+            setupPortfolioLens(grid);
 
             if (!items.length) {
                 renderStatus('No works here', '这个筛选下暂时没有作品。换一个类型看看。');
@@ -1520,6 +1665,11 @@
                 const hasVideo = Boolean(videoUrl);
                 card.className = `video-card${hasVideo ? '' : ' image-only'}`;
                 card.id = `work-${item['序号'] || index + 1}`;
+                if (hasVideo) {
+                    card.tabIndex = 0;
+                    card.setAttribute('role', 'button');
+                    card.setAttribute('aria-label', `${titleText}，播放或暂停`);
+                }
                 const mediaHtml = hasVideo
                     ? `<video loop playsinline controlsList="nodownload" preload="metadata"${coverUrl ? ` poster="${escapeHTML(coverUrl)}"` : ''}></video>`
                     : `<img class="cover-image" src="${escapeHTML(coverUrl)}" alt="${escapeHTML(titleText)}">`;
@@ -1527,6 +1677,7 @@
                 card.innerHTML = `
                     <div class="video-wrapper">
                         ${mediaHtml}
+                        <div class="paper-corner" aria-hidden="true"></div>
                         <div class="card-number">${String(item['序号'] || index + 1).padStart(2, '0')}</div>
                         <div class="click-catcher"></div>
                         <div class="play-indicator"></div>
@@ -1578,24 +1729,36 @@
 
                 // 卡片点击切换播放/暂停
                 card.addEventListener('click', () => {
-                    if (!video.src) return;
-                    if (video.paused) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
+                    toggleCardVideo(video);
+                });
+
+                card.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Enter' && e.key !== ' ') return;
+                    if (e.target.closest('button, video, a')) return;
+                    if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) return;
+                    e.preventDefault();
+                    toggleCardVideo(video);
+                });
+
+                card.addEventListener('pointermove', (e) => {
+                    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+                    const rect = card.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 7;
+                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -7;
+                    card.style.setProperty('--tilt-x', `${x.toFixed(2)}deg`);
+                    card.style.setProperty('--tilt-y', `${y.toFixed(2)}deg`);
+                });
+
+                card.addEventListener('pointerleave', () => {
+                    card.style.setProperty('--tilt-x', '0deg');
+                    card.style.setProperty('--tilt-y', '0deg');
                 });
 
                 // 全屏透明点击层：点击画面区域暂停/播放
                 const catcher = card.querySelector('.click-catcher');
                 catcher.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    if (!video.src) return;
-                    if (video.paused) {
-                        video.play();
-                    } else {
-                        video.pause();
-                    }
+                    toggleCardVideo(video);
                 });
 
                 // 全屏按钮：进入全屏或退出全屏

@@ -31,6 +31,12 @@ FIELD_TYPE = os.environ.get("FIELD_TYPE", "类型")
 FIELD_DURATION = os.environ.get("FIELD_DURATION", "时长")
 FIELD_TOOL = os.environ.get("FIELD_TOOL", "AI工具")
 FIELD_ORDER = os.environ.get("FIELD_ORDER", "序号")
+FIELD_DESC = os.environ.get("FIELD_DESC", "说明")
+FIELD_COVER_URL = os.environ.get("FIELD_COVER_URL", "封面URL")
+FIELD_COVER_LOCAL = os.environ.get("FIELD_COVER_LOCAL", "封面本地路径")
+FIELD_VIDEO_URL = os.environ.get("FIELD_VIDEO_URL", "URL")
+FIELD_VIDEO_LOCAL = os.environ.get("FIELD_VIDEO_LOCAL", "样片本地路径")
+REPO_PATH_MARKER = "/feishu-website/"
 
 def get_tenant_token(app_id, app_secret):
     url = "https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal"
@@ -99,6 +105,34 @@ def fetch_media_urls(token, batch):
         print(f"Failed to fetch URLs: {e}")
     return None
 
+def normalize_field_text(value):
+    if isinstance(value, list):
+        return "".join(normalize_field_text(item) for item in value)
+    if isinstance(value, dict):
+        return str(value.get("text") or value.get("name") or value.get("url") or "").strip()
+    return str(value or "").strip()
+
+def local_path_to_site_url(value):
+    text = normalize_field_text(value)
+    if not text:
+        return ""
+    if text.startswith(("http://", "https://", "./", "/assets/")):
+        return text
+    if REPO_PATH_MARKER in text:
+        return "./" + text.split(REPO_PATH_MARKER, 1)[1].lstrip("/")
+    return ""
+
+def load_existing_records():
+    if not os.path.exists(OUTPUT_FILE):
+        return {}
+    try:
+        with open(OUTPUT_FILE, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+        return {str(item.get("序号")): item for item in existing if item.get("序号") is not None}
+    except Exception as e:
+        print(f"Could not read existing {OUTPUT_FILE}: {e}")
+        return {}
+
 def main():
     app_id = os.environ.get("LARK_APP_ID")
     app_secret = os.environ.get("LARK_APP_SECRET")
@@ -149,28 +183,52 @@ def main():
             for item in tmp_urls:
                 mapped_urls[item["file_token"]] = item["tmp_download_url"]
 
-    # Build final formatted JSON array for frontend
+    existing_by_order = load_existing_records()
+
+    # Build final formatted JSON array for frontend. Attachment URLs win; existing
+    # repo-relative URLs and local-path fields keep the archive stable during migration.
     final_output = []
     for r in records:
         fields = r.get("fields", {})
+        order = get_order(r)
+        existing = existing_by_order.get(str(order), {})
         attachments = fields.get(FIELD_VIDEO, [])
+        resolved_url = ""
         if attachments and isinstance(attachments, list) and len(attachments) > 0:
             token = attachments[0].get("file_token")
-            # Only add if we successfully resolved the URL
             if token in mapped_urls:
-                final_output.append({
-                    "内容": fields.get(FIELD_TITLE, ""),
-                    "序号": get_order(r),
-                    "类型": fields.get(FIELD_TYPE, []),
-                    "时长": fields.get(FIELD_DURATION, ""),
-                    "AI工具": fields.get(FIELD_TOOL, ""),
-                    "URL": mapped_urls[token]
-                })
+                resolved_url = mapped_urls[token]
+
+        direct_video_url = local_path_to_site_url(fields.get(FIELD_VIDEO_URL, ""))
+        local_video_url = local_path_to_site_url(fields.get(FIELD_VIDEO_LOCAL, ""))
+        direct_cover_url = local_path_to_site_url(fields.get(FIELD_COVER_URL, ""))
+        local_cover_url = local_path_to_site_url(fields.get(FIELD_COVER_LOCAL, ""))
+
+        merged = {
+            "内容": fields.get(FIELD_TITLE, "") or existing.get("内容", ""),
+            "序号": order,
+            "类型": fields.get(FIELD_TYPE, []) or existing.get("类型", []),
+            "时长": fields.get(FIELD_DURATION, "") or existing.get("时长", ""),
+            "AI工具": fields.get(FIELD_TOOL, "") or existing.get("AI工具", ""),
+            "说明": fields.get(FIELD_DESC, "") or existing.get("说明", ""),
+            "封面URL": direct_cover_url or local_cover_url or existing.get("封面URL", ""),
+            "URL": resolved_url or direct_video_url or local_video_url or existing.get("URL", "")
+        }
+
+        if merged["内容"] and (merged["URL"] or merged["封面URL"]):
+            final_output.append(merged)
 
     if not final_output:
         print(
-            f"No downloadable videos were resolved from field '{FIELD_VIDEO}'. "
+            f"No playable videos or covers were resolved from Feishu fields. "
             "Keeping existing api/videos.json unchanged."
+        )
+        sys.exit(1)
+
+    if existing_by_order and len(final_output) < len(existing_by_order):
+        print(
+            f"Resolved {len(final_output)} items, fewer than existing {len(existing_by_order)}. "
+            "Keeping existing api/videos.json unchanged to avoid shrinking the public archive."
         )
         sys.exit(1)
 
