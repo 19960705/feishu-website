@@ -94,10 +94,10 @@
 
         header {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 480px);
             gap: clamp(18px, 4vw, 54px);
-            align-items: end;
-            min-height: clamp(170px, 28vh, 300px);
+            align-items: center;
+            min-height: clamp(440px, 72vh, 690px);
             padding: clamp(18px, 3vw, 38px) 0 clamp(18px, 3vw, 34px);
             border-bottom: 1px solid var(--line);
             position: relative;
@@ -163,9 +163,9 @@
             max-width: 980px;
             margin: 0;
             color: var(--porcelain);
-            font-size: clamp(3.05rem, 9vw, 7.8rem);
+            font-size: clamp(3.05rem, 7vw, 6.85rem);
             font-weight: 600;
-            line-height: 0.82;
+            line-height: 0.86;
             text-wrap: balance;
             text-shadow: 2px 0 rgba(122, 167, 183, 0.45), -2px 1px rgba(242, 110, 59, 0.42);
         }
@@ -177,7 +177,41 @@
             font-size: clamp(0.96rem, 1.45vw, 1.14rem);
         }
 
-        .archive-panel {
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .hero-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 42px;
+            padding: 0.58rem 0.9rem;
+            border: 1px solid rgba(197, 223, 230, 0.28);
+            border-radius: var(--radius-sm);
+            color: var(--porcelain);
+            background: rgba(244, 239, 229, 0.06);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: transform 0.24s var(--ease), background 0.24s ease, color 0.24s ease;
+        }
+
+        .hero-link.primary {
+            color: var(--plum-noir);
+            border-color: var(--wasabi);
+            background: var(--wasabi);
+            box-shadow: 5px 5px 0 rgba(242, 110, 59, 0.62);
+        }
+
+        .hero-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .recruiter-panel {
             position: relative;
             padding: 18px;
             border: 1px solid var(--line);
@@ -191,7 +225,7 @@
             overflow: hidden;
         }
 
-        .archive-panel::before {
+        .recruiter-panel::before {
             content: '01';
             position: absolute;
             top: -10px;
@@ -203,17 +237,121 @@
             font-style: italic;
         }
 
-        .archive-panel h2 {
-            margin: 0 0 8px;
-            color: var(--blue-ice);
-            font-size: 1.38rem;
-            font-weight: 600;
+        .player-frame {
+            position: relative;
+            aspect-ratio: 16 / 10;
+            overflow: hidden;
+            border: 1px solid rgba(197, 223, 230, 0.22);
+            border-radius: var(--radius-sm);
+            background:
+                repeating-linear-gradient(90deg, rgba(244, 239, 229, 0.08) 0 1px, transparent 1px 14px),
+                #050508;
+            box-shadow: 0 18px 44px rgba(0, 0, 0, 0.32);
         }
 
-        .archive-panel p {
+        .player-frame video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .player-frame::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(20, 11, 23, 0.02), rgba(20, 11, 23, 0.44));
+            opacity: 0.55;
+        }
+
+        .featured-play {
+            position: absolute;
+            left: 16px;
+            bottom: 16px;
+            z-index: 3;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 46px;
+            padding: 0.62rem 0.86rem;
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            border-radius: var(--radius-sm);
+            color: var(--plum-noir);
+            background: linear-gradient(145deg, rgba(244, 239, 229, 0.96), rgba(197, 223, 230, 0.78));
+            box-shadow: 5px 5px 0 rgba(242, 110, 59, 0.74), 0 14px 34px rgba(0, 0, 0, 0.32);
+            cursor: pointer;
+            font-size: 0.92rem;
+            font-weight: 800;
+            transition: opacity 0.22s ease, transform 0.22s var(--ease);
+        }
+
+        .featured-play::before {
+            content: '';
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 8px 0 8px 13px;
+            border-color: transparent transparent transparent var(--plum-noir);
+        }
+
+        .featured-play:hover {
+            transform: translateY(-2px);
+        }
+
+        .featured-play.is-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(8px);
+        }
+
+        .featured-copy {
+            position: relative;
+            z-index: 2;
+            padding-top: 15px;
+        }
+
+        .section-label {
+            display: inline-block;
+            margin-bottom: 7px;
+            color: var(--wasabi);
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .recruiter-panel h2 {
+            margin: 0 0 8px;
+            color: var(--blue-ice);
+            font-size: clamp(1.36rem, 3vw, 2rem);
+            font-weight: 600;
+            line-height: 1.04;
+        }
+
+        .recruiter-panel p {
             margin: 0;
             color: var(--muted);
             font-size: 0.92rem;
+        }
+
+        .featured-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 12px;
+        }
+
+        .featured-meta span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 4px 8px;
+            border: 1px solid rgba(197, 223, 230, 0.22);
+            border-radius: 999px;
+            color: var(--blue-ice);
+            background: rgba(197, 223, 230, 0.1);
+            font-size: 0.74rem;
+            font-weight: 700;
         }
 
         .signal-row {
@@ -698,6 +836,7 @@
             header {
                 grid-template-columns: 1fr;
                 min-height: 0;
+                align-items: start;
             }
 
             header::after {
@@ -706,7 +845,7 @@
                 opacity: 0.45;
             }
 
-            .archive-panel {
+            .recruiter-panel {
                 padding: 14px;
             }
         }
@@ -717,7 +856,23 @@
             }
 
             header h1 {
-                font-size: clamp(2.7rem, 16vw, 4.6rem);
+                font-size: clamp(2.48rem, 14vw, 4.1rem);
+            }
+
+            header p {
+                font-size: 0.94rem;
+            }
+
+            .hero-actions {
+                margin-top: 16px;
+            }
+
+            .hero-link {
+                flex: 1 1 auto;
+            }
+
+            .player-frame {
+                aspect-ratio: 4 / 5;
             }
 
             .filters {
@@ -757,15 +912,27 @@
             <div>
                 <div class="eyebrow">
                     <span>Lunah / Jinny</span>
-                    <span>AI Motion Portfolio</span>
-                    <span>Feishu Stream Archive</span>
+                    <span>AI Video Portfolio</span>
+                    <span>Recruiter Preview</span>
                 </div>
-                <h1>Selected AI Works</h1>
-                <p>梦境、商品、知识和视觉实验的短片索引。点开即看，筛选即重组，给 AI 视频作品留一点冷光、一点玉色和一点故意错位的数字余温。</p>
+                <h1>AI Video Portfolio</h1>
+                <p>AI 视频、游戏视觉、互动网页和电商工具原型作品集。招聘方打开链接后，可以直接播放精选样片，也可以继续向下查看完整作品矩阵。</p>
+                <div class="hero-actions">
+                    <a class="hero-link primary" href="#featured-player">播放精选作品</a>
+                    <a class="hero-link" href="#portfolio-grid">查看全部作品</a>
+                </div>
             </div>
-            <aside class="archive-panel" aria-label="作品集概览">
-                <h2>Motion index</h2>
-                <p>从飞书视频库自动读取，适合快速预览、归档和给合作方展示。</p>
+            <aside class="recruiter-panel" id="featured-player" aria-label="精选作品播放器">
+                <div class="player-frame">
+                    <video id="featured-video" playsinline controls controlsList="nodownload" preload="metadata"></video>
+                    <button class="featured-play" id="featured-play" type="button">播放精选作品</button>
+                </div>
+                <div class="featured-copy">
+                    <span class="section-label">First play</span>
+                    <h2 id="featured-title">精选视频样片</h2>
+                    <p id="featured-desc">正在加载最适合首屏展示的作品。</p>
+                    <div class="featured-meta" id="featured-meta"></div>
+                </div>
                 <div class="signal-row">
                     <div class="signal">
                         <strong id="work-count">--</strong>
@@ -832,6 +999,7 @@
                 document.getElementById('work-count').textContent = videoData.length;
                 document.getElementById('category-count').textContent = categories.size || 1;
 
+                renderFeatured(videoData);
                 renderFilters(Array.from(categories));
                 renderGallery(videoData);
 
@@ -896,6 +1064,55 @@
                     filterGallery(cat);
                 });
             });
+        }
+
+        function renderFeatured(items) {
+            const featuredVideo = document.getElementById('featured-video');
+            const featuredPlay = document.getElementById('featured-play');
+            const featuredTitle = document.getElementById('featured-title');
+            const featuredDesc = document.getElementById('featured-desc');
+            const featuredMeta = document.getElementById('featured-meta');
+            const featuredItem = items.find(item => item['精选'] && item['URL']) || items.find(item => item['URL']) || items[0];
+
+            if (!featuredItem || !featuredVideo) return;
+
+            const titleText = extractTags(featuredItem['内容'])[0] || featuredItem['内容'] || '精选视频样片';
+            const durationText = extractTags(featuredItem['时长']).join('') || featuredItem['时长'] || 'preview';
+            const toolText = extractTags(featuredItem['AI工具']).join('') || featuredItem['AI工具'] || 'AI workflow';
+            const descriptionText = extractTags(featuredItem['说明']).join('') || featuredItem['说明'] || '点击播放，快速查看作品动态效果。';
+            const videoUrl = featuredItem['URL'] || featuredItem['视频URL'] || '';
+            const coverUrl = featuredItem['封面URL'] || featuredItem['封面'] || featuredItem['Cover'] || '';
+            const typeText = extractTags(featuredItem['类型']).join(' / ') || 'AI video';
+
+            featuredTitle.textContent = titleText;
+            featuredDesc.textContent = descriptionText;
+            featuredMeta.innerHTML = `
+                <span>${escapeHTML(durationText)}</span>
+                <span>${escapeHTML(typeText)}</span>
+                <span>${escapeHTML(toolText)}</span>
+            `;
+
+            if (coverUrl) {
+                featuredVideo.poster = coverUrl;
+            }
+            if (videoUrl) {
+                featuredVideo.src = videoUrl + '#t=0.001';
+            } else {
+                featuredVideo.removeAttribute('controls');
+                featuredPlay.textContent = '查看作品截图';
+            }
+
+            if (featuredPlay && videoUrl) {
+                featuredPlay.addEventListener('click', () => {
+                    featuredVideo.play();
+                });
+                featuredVideo.addEventListener('play', () => {
+                    featuredPlay.classList.add('is-hidden');
+                });
+                featuredVideo.addEventListener('pause', () => {
+                    featuredPlay.classList.remove('is-hidden');
+                });
+            }
         }
 
         function filterGallery(category) {
