@@ -1393,9 +1393,12 @@
             const strip = document.getElementById('showreel-strip');
             if (!strip) return;
 
-            const reelItems = items
-                .filter(item => item['封面URL'] || item['封面'] || item['Cover'])
-                .slice(0, 10);
+            const withCovers = items.filter(item => item['封面URL'] || item['封面'] || item['Cover']);
+            const featured = withCovers.filter(item => item['精选']);
+            const latest = [...withCovers].sort((a, b) => (b['序号'] || 0) - (a['序号'] || 0));
+            const reelItems = [...featured, ...latest]
+                .filter((item, index, all) => all.findIndex(candidate => candidate['序号'] === item['序号']) === index)
+                .slice(0, 12);
 
             strip.innerHTML = reelItems.map((item, index) => {
                 const titleText = extractTags(item['内容'])[0] || item['内容'] || 'Untitled';
