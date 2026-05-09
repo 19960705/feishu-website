@@ -628,12 +628,6 @@
         }
 
         .portfolio-container {
-            --loupe-x: -220px;
-            --loupe-y: -220px;
-            --loupe-size: clamp(156px, 17vw, 236px);
-            --loupe-image: linear-gradient(145deg, rgba(122, 167, 183, 0.42), rgba(20, 11, 23, 0.92));
-            --loupe-focus-x: 50%;
-            --loupe-focus-y: 50%;
             position: relative;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(min(100%, 272px), 1fr));
@@ -643,108 +637,11 @@
             perspective: 1200px;
         }
 
-        .inspect-loupe {
-            position: absolute;
-            left: var(--loupe-x);
-            top: var(--loupe-y);
-            z-index: 80;
-            width: var(--loupe-size);
-            height: calc(var(--loupe-size) + 72px);
-            pointer-events: none;
-            opacity: 0;
-            transform: translate(-50%, -50%) rotate(-10deg) scale(0.66);
-            transform-origin: 50% 42%;
-            transition: opacity 0.2s ease, transform 0.32s var(--ease);
-        }
-
-        .portfolio-container.is-lensing .inspect-loupe {
-            opacity: 1;
-            transform: translate(-50%, -50%) rotate(-5deg) scale(1);
-        }
-
-        .loupe-glass {
-            position: relative;
-            width: var(--loupe-size);
-            height: var(--loupe-size);
-            overflow: hidden;
-            border: 2px solid rgba(244, 239, 229, 0.68);
-            border-radius: 50%;
-            background:
-                radial-gradient(circle at 32% 27%, rgba(255, 255, 255, 0.62), transparent 0 11%),
-                radial-gradient(circle at 50% 50%, rgba(244, 239, 229, 0.1), rgba(20, 11, 23, 0.36) 68%),
-                var(--loupe-image);
-            background-size: auto, auto, 215% 215%;
-            background-position: center, center, var(--loupe-focus-x) var(--loupe-focus-y);
-            box-shadow:
-                inset 0 0 0 8px rgba(20, 11, 23, 0.42),
-                inset 0 0 34px rgba(244, 239, 229, 0.18),
-                0 18px 48px rgba(0, 0, 0, 0.34),
-                8px 8px 0 rgba(242, 110, 59, 0.54);
-            filter: saturate(1.22) contrast(1.08);
-        }
-
-        .loupe-glass::before,
-        .loupe-glass::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-
-        .loupe-glass::before {
-            background:
-                linear-gradient(105deg, transparent 0 30%, rgba(255, 255, 255, 0.26) 38%, transparent 48% 100%),
-                repeating-linear-gradient(0deg, rgba(244, 239, 229, 0.16) 0 1px, transparent 1px 9px);
-            mix-blend-mode: screen;
-        }
-
-        .loupe-glass::after {
-            inset: 12px;
-            border: 1px solid rgba(244, 239, 229, 0.2);
-            border-radius: 50%;
-            box-shadow: inset 0 0 26px rgba(20, 11, 23, 0.5);
-        }
-
-        .loupe-handle {
-            position: absolute;
-            left: 58%;
-            top: calc(var(--loupe-size) - 13px);
-            width: clamp(28px, 3.6vw, 46px);
-            height: 88px;
-            border-radius: 999px;
-            background:
-                linear-gradient(90deg, rgba(244, 239, 229, 0.72), rgba(122, 167, 183, 0.54) 34%, rgba(20, 11, 23, 0.78)),
-                var(--card-accent, var(--wasabi));
-            border: 1px solid rgba(244, 239, 229, 0.26);
-            box-shadow: 8px 16px 28px rgba(0, 0, 0, 0.28);
-            transform: rotate(-34deg);
-            transform-origin: 50% 0;
-        }
-
-        .loupe-spark {
-            position: absolute;
-            inset: 0;
-        }
-
-        .loupe-spark i {
-            position: absolute;
-            display: block;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--wasabi);
-            box-shadow: 0 0 16px var(--wasabi);
-            opacity: 0.86;
-        }
-
-        .loupe-spark i:nth-child(1) { top: 12%; left: 4%; }
-        .loupe-spark i:nth-child(2) { top: 31%; right: 1%; background: var(--cool-blue); box-shadow: 0 0 16px var(--cool-blue); }
-        .loupe-spark i:nth-child(3) { bottom: 21%; left: 12%; background: var(--persimmon); box-shadow: 0 0 16px var(--persimmon); }
-        }
-
         .video-card {
             --tilt-x: 0deg;
             --tilt-y: 0deg;
+            --cue-x: 50%;
+            --cue-y: 50%;
             position: relative;
             z-index: 1;
             min-width: 0;
@@ -1116,6 +1013,94 @@
             opacity: 0.12;
         }
 
+        .play-cue {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            overflow: hidden;
+            transition: opacity 0.28s ease;
+        }
+
+        .play-cue::before {
+            content: '';
+            position: absolute;
+            inset: -18%;
+            background:
+                radial-gradient(circle at var(--cue-x) var(--cue-y), rgba(244, 239, 229, 0.38), transparent 0 17%),
+                conic-gradient(from 0.25turn at var(--cue-x) var(--cue-y), transparent 0 18%, rgba(196, 214, 77, 0.24) 24%, rgba(242, 110, 59, 0.2) 31%, transparent 39% 100%);
+            filter: blur(0.2px);
+            mix-blend-mode: screen;
+            transform: scale(0.94);
+            transition: transform 0.42s var(--ease), opacity 0.32s ease;
+        }
+
+        .play-cue::after {
+            content: '';
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            top: 12px;
+            bottom: 12px;
+            border: 1px solid rgba(244, 239, 229, 0.22);
+            border-radius: var(--radius-sm);
+            background:
+                repeating-linear-gradient(90deg, rgba(244, 239, 229, 0.58) 0 5px, transparent 5px 18px) top left / 100% 9px no-repeat,
+                repeating-linear-gradient(90deg, rgba(244, 239, 229, 0.44) 0 5px, transparent 5px 18px) bottom left / 100% 9px no-repeat;
+            opacity: 0.5;
+        }
+
+        .play-cue span,
+        .play-cue i {
+            position: absolute;
+            left: var(--cue-x);
+            top: var(--cue-y);
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .play-cue span {
+            width: 78px;
+            height: 78px;
+            border: 1px solid rgba(244, 239, 229, 0.52);
+            box-shadow: 0 0 0 14px rgba(244, 239, 229, 0.06), 0 0 36px rgba(196, 214, 77, 0.28);
+            opacity: 0.72;
+            animation: cuePulse 1.35s ease-in-out infinite;
+        }
+
+        .play-cue i {
+            width: 7px;
+            height: 7px;
+            background: var(--card-accent, var(--wasabi));
+            box-shadow: 0 0 18px var(--card-accent, var(--wasabi));
+        }
+
+        .video-card:hover .play-cue,
+        .video-card:focus-visible .play-cue,
+        .video-card.playing .play-cue,
+        .video-card.is-cued .play-cue {
+            opacity: 1;
+        }
+
+        .video-card:hover .play-cue::before,
+        .video-card:focus-visible .play-cue::before,
+        .video-card.playing .play-cue::before,
+        .video-card.is-cued .play-cue::before {
+            transform: scale(1);
+        }
+
+        @keyframes cuePulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(0.86);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.08);
+                opacity: 0.86;
+            }
+        }
+
         .play-indicator {
             position: absolute;
             top: 50%;
@@ -1477,10 +1462,6 @@
         }
 
         @media (hover: none), (pointer: coarse) {
-            .inspect-loupe {
-                display: none;
-            }
-
             .video-card:hover {
                 transform: translateY(0);
             }
@@ -1500,7 +1481,6 @@
                 transition-duration: 0.01ms !important;
             }
 
-            .inspect-loupe,
             .paper-burst {
                 display: none;
             }
@@ -1791,70 +1771,9 @@
             }
         }
 
-        function cssUrl(value) {
-            const escaped = String(value || '')
-                .replace(/\\/g, '\\\\')
-                .replace(/"/g, '\\"');
-            return escaped ? `url("${escaped}")` : '';
-        }
-
-        function setupPortfolioLens(grid) {
-            if (!grid) return;
-
-            let loupe = grid.querySelector('.inspect-loupe');
-            if (!loupe) {
-                loupe = document.createElement('div');
-                loupe.className = 'inspect-loupe';
-                loupe.setAttribute('aria-hidden', 'true');
-                loupe.innerHTML = `
-                    <div class="loupe-glass"></div>
-                    <div class="loupe-handle"></div>
-                    <div class="loupe-spark"><i></i><i></i><i></i></div>
-                `;
-                grid.appendChild(loupe);
-            }
-
-            if (grid.dataset.lensReady) return;
-            grid.dataset.lensReady = 'true';
-
-            const canHover = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-            const moveLens = (e) => {
-                if (!canHover()) return;
-                const card = e.target.closest('.video-card');
-                if (!card) {
-                    grid.classList.remove('is-lensing');
-                    return;
-                }
-                const rect = grid.getBoundingClientRect();
-                const cardRect = card.getBoundingClientRect();
-                const focusX = Math.max(0, Math.min(100, ((e.clientX - cardRect.left) / cardRect.width) * 100));
-                const focusY = Math.max(0, Math.min(100, ((e.clientY - cardRect.top) / cardRect.height) * 100));
-
-                if (card.dataset.cover) {
-                    grid.style.setProperty('--loupe-image', cssUrl(card.dataset.cover));
-                }
-                const accent = getComputedStyle(card).getPropertyValue('--card-accent').trim();
-                if (accent) {
-                    grid.style.setProperty('--card-accent', accent);
-                }
-                grid.style.setProperty('--loupe-x', `${Math.round(e.clientX - rect.left)}px`);
-                grid.style.setProperty('--loupe-y', `${Math.round(e.clientY - rect.top)}px`);
-                grid.style.setProperty('--loupe-focus-x', `${focusX.toFixed(1)}%`);
-                grid.style.setProperty('--loupe-focus-y', `${focusY.toFixed(1)}%`);
-                grid.classList.add('is-lensing');
-            };
-
-            grid.addEventListener('pointerenter', moveLens);
-            grid.addEventListener('pointermove', moveLens);
-            grid.addEventListener('pointerleave', () => {
-                grid.classList.remove('is-lensing');
-            });
-        }
-
         function renderGallery(items) {
             const grid = document.getElementById('portfolio-grid');
             grid.innerHTML = '';
-            setupPortfolioLens(grid);
 
             if (!items.length) {
                 renderStatus('No works here', '这个筛选下暂时没有作品。换一个类型看看。');
@@ -1883,9 +1802,6 @@
                 const hasVideo = Boolean(videoUrl);
                 card.className = `video-card${hasVideo ? '' : ' image-only'}`;
                 card.id = `work-${item['序号'] || index + 1}`;
-                if (coverUrl) {
-                    card.dataset.cover = coverUrl;
-                }
                 if (hasVideo) {
                     card.tabIndex = 0;
                     card.setAttribute('role', 'button');
@@ -1907,6 +1823,7 @@
                         ${mediaHtml}
                         <div class="card-number">${String(item['序号'] || index + 1).padStart(2, '0')}</div>
                         <div class="click-catcher"></div>
+                        <div class="play-cue" aria-hidden="true"><span></span><i></i></div>
                         <div class="play-indicator"></div>
                         <button class="fullscreen-btn" aria-label="全屏播放" title="全屏观看">
                             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
@@ -1970,15 +1887,21 @@
                 card.addEventListener('pointermove', (e) => {
                     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
                     const rect = card.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 7;
-                    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -7;
+                    const px = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                    const py = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+                    const x = (px / 100 - 0.5) * 7;
+                    const y = (py / 100 - 0.5) * -7;
                     card.style.setProperty('--tilt-x', `${x.toFixed(2)}deg`);
                     card.style.setProperty('--tilt-y', `${y.toFixed(2)}deg`);
+                    card.style.setProperty('--cue-x', `${px.toFixed(1)}%`);
+                    card.style.setProperty('--cue-y', `${py.toFixed(1)}%`);
                 });
 
                 card.addEventListener('pointerleave', () => {
                     card.style.setProperty('--tilt-x', '0deg');
                     card.style.setProperty('--tilt-y', '0deg');
+                    card.style.setProperty('--cue-x', '50%');
+                    card.style.setProperty('--cue-y', '50%');
                 });
 
                 // 全屏透明点击层：点击画面区域暂停/播放
