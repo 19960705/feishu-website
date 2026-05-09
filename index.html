@@ -3,134 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 视频作品集 | 岳影空间</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Lunah / Jinny AI Motion Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+SC:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Aesop inspired warm, earthy palette */
-            --bg-color: #F9F7F3;
-            --text-primary: #2C2A28;
-            --text-secondary: #5C5855;
-            --accent-color: #A38C75;
-            --tag-bg: #EAE5DE;
-            --card-bg: #FFFFFF;
-            
-            --font-serif: 'Playfair Display', 'Noto Serif SC', Georgia, serif;
-            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-            
-            --spacing-sm: 0.5rem;
-            --spacing-md: 1rem;
-            --spacing-lg: 2rem;
-            --spacing-xl: 4rem;
+            --plum-noir: #140B17;
+            --plum-ink: #231125;
+            --cool-blue: #7AA7B7;
+            --blue-ice: #C5DFE6;
+            --jade: #37A78D;
+            --jade-deep: #0D655C;
+            --wasabi: #C4D64D;
+            --persimmon: #F26E3B;
+            --porcelain: #F4EFE5;
+            --mist: rgba(244, 239, 229, 0.76);
+            --muted: rgba(244, 239, 229, 0.62);
+            --line: rgba(197, 223, 230, 0.26);
+            --panel: rgba(22, 12, 24, 0.78);
+            --panel-strong: rgba(244, 239, 229, 0.09);
+            --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+
+            --font-display: 'Cormorant Garamond', 'Noto Serif SC', Georgia, serif;
+            --font-ui: 'Bricolage Grotesque', 'Noto Serif SC', system-ui, -apple-system, sans-serif;
+
+            --page-pad: clamp(16px, 3.4vw, 44px);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            font-family: var(--font-sans);
+            min-height: 100vh;
+            background:
+                linear-gradient(135deg, rgba(20, 11, 23, 0.96), rgba(35, 17, 37, 0.98) 48%, rgba(13, 101, 92, 0.82)),
+                repeating-linear-gradient(90deg, rgba(197, 223, 230, 0.045) 0 1px, transparent 1px 42px),
+                repeating-linear-gradient(0deg, rgba(196, 214, 77, 0.035) 0 1px, transparent 1px 34px);
+            color: var(--porcelain);
+            font-family: var(--font-ui);
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
-        /* Typography */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            background:
+                linear-gradient(115deg, transparent 0 17%, rgba(122, 167, 183, 0.12) 17.1% 17.6%, transparent 17.7% 52%, rgba(242, 110, 59, 0.12) 52.1% 52.45%, transparent 52.6%),
+                linear-gradient(24deg, transparent 0 65%, rgba(196, 214, 77, 0.08) 65.1% 65.7%, transparent 65.8%);
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+            background-size: 100% 7px, 9px 100%;
+            mix-blend-mode: screen;
+        }
+
+        button,
+        video {
+            font: inherit;
+        }
+
         h1, h2, h3 {
-            font-family: var(--font-serif);
-            font-weight: 400;
+            font-family: var(--font-display);
+            letter-spacing: 0;
+        }
+
+        .app-shell {
+            width: min(1520px, 100%);
+            margin: 0 auto;
+            padding: clamp(18px, 3vw, 34px) var(--page-pad) 56px;
         }
 
         header {
-            padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+            gap: clamp(18px, 4vw, 54px);
+            align-items: end;
+            min-height: clamp(170px, 28vh, 300px);
+            padding: clamp(18px, 3vw, 38px) 0 clamp(18px, 3vw, 34px);
+            border-bottom: 1px solid var(--line);
+            position: relative;
+        }
+
+        header::before,
+        header::after {
+            content: '';
+            position: absolute;
+            pointer-events: none;
+        }
+
+        header::before {
+            left: 0;
+            bottom: -1px;
+            width: min(420px, 68vw);
+            height: 1px;
+            background: linear-gradient(90deg, var(--wasabi), var(--cool-blue), transparent);
+        }
+
+        header::after {
+            right: 0;
+            top: 14px;
+            width: 84px;
+            height: 84px;
+            border: 1px solid rgba(197, 223, 230, 0.3);
+            border-left-color: var(--persimmon);
+            transform: rotate(45deg);
+            opacity: 0.72;
+        }
+
+        .eyebrow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin: 0 0 14px;
+            color: var(--blue-ice);
+            font-size: clamp(0.72rem, 1.2vw, 0.82rem);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .eyebrow span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 28px;
+            padding: 5px 9px;
+            border: 1px solid rgba(197, 223, 230, 0.28);
+            border-radius: var(--radius-sm);
+            background: rgba(244, 239, 229, 0.06);
+            letter-spacing: 0;
+        }
+
+        .eyebrow span:first-child {
+            color: var(--plum-noir);
+            background: var(--wasabi);
+            border-color: transparent;
+            box-shadow: 4px 4px 0 rgba(242, 110, 59, 0.72);
         }
 
         header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 0.05em;
-            margin-bottom: var(--spacing-md);
+            max-width: 980px;
+            margin: 0;
+            color: var(--porcelain);
+            font-size: clamp(3.05rem, 9vw, 7.8rem);
+            font-weight: 600;
+            line-height: 0.82;
+            text-wrap: balance;
+            text-shadow: 2px 0 rgba(122, 167, 183, 0.45), -2px 1px rgba(242, 110, 59, 0.42);
         }
 
         header p {
-            font-family: var(--font-serif);
-            color: var(--text-secondary);
+            max-width: 620px;
+            margin: clamp(12px, 2vw, 18px) 0 0;
+            color: var(--mist);
+            font-size: clamp(0.96rem, 1.45vw, 1.14rem);
+        }
+
+        .archive-panel {
+            position: relative;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background:
+                linear-gradient(145deg, rgba(244, 239, 229, 0.12), rgba(244, 239, 229, 0.04)),
+                rgba(20, 11, 23, 0.54);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+
+        .archive-panel::before {
+            content: '01';
+            position: absolute;
+            top: -10px;
+            right: 12px;
+            color: rgba(196, 214, 77, 0.2);
+            font-family: var(--font-display);
+            font-size: 5rem;
+            line-height: 1;
             font-style: italic;
+        }
+
+        .archive-panel h2 {
+            margin: 0 0 8px;
+            color: var(--blue-ice);
+            font-size: 1.38rem;
+            font-weight: 600;
+        }
+
+        .archive-panel p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .signal-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .signal {
+            min-width: 0;
+            padding: 10px 8px;
+            border: 1px solid rgba(197, 223, 230, 0.18);
+            border-radius: var(--radius-sm);
+            background: rgba(0, 0, 0, 0.14);
+        }
+
+        .signal strong,
+        .signal span {
+            display: block;
+        }
+
+        .signal strong {
+            color: var(--porcelain);
             font-size: 1.1rem;
         }
 
-        /* Filter Tabs */
+        .signal span {
+            color: var(--muted);
+            font-size: 0.72rem;
+            text-transform: uppercase;
+        }
+
+        main {
+            padding-top: 18px;
+        }
+
         .filters {
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
-            padding: 0 var(--spacing-lg);
+            gap: 10px;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            margin: 0 calc(var(--page-pad) * -1) 18px;
+            padding: 13px var(--page-pad);
+            border-bottom: 1px solid rgba(197, 223, 230, 0.16);
+            background: rgba(20, 11, 23, 0.78);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
         }
 
         .filter-btn {
-            background: transparent;
-            border: 1px solid var(--accent-color);
-            color: var(--text-primary);
-            padding: 0.4rem 1.2rem;
-            border-radius: 50px;
-            font-family: var(--font-sans);
-            font-size: 0.9rem;
+            max-width: 100%;
+            min-height: 40px;
+            background: rgba(244, 239, 229, 0.06);
+            border: 1px solid rgba(197, 223, 230, 0.24);
+            color: var(--mist);
+            padding: 0.5rem 0.88rem;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-ui);
+            font-size: 0.88rem;
+            font-weight: 650;
+            letter-spacing: 0;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.24s var(--ease), border-color 0.24s ease, background-color 0.24s ease, color 0.24s ease;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.04);
         }
 
         .filter-btn.active, .filter-btn:hover {
-            background-color: var(--accent-color);
-            color: var(--bg-color);
+            background: var(--wasabi);
+            border-color: var(--wasabi);
+            color: var(--plum-noir);
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 rgba(242, 110, 59, 0.58);
         }
 
-        /* Standard Grid Layout */
         .portfolio-container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: var(--spacing-md);
-            align-items: start; /* Prevents cards in the same row from stretching to match the tallest card */
-            padding: 0 var(--spacing-lg) var(--spacing-xl);
-            max-width: 1400px;
-            margin: 0 auto;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 255px), 1fr));
+            gap: clamp(14px, 2vw, 22px);
+            align-items: start;
+            margin: 0;
         }
 
-        @media (max-width: 1200px) {
-            .portfolio-container { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 900px) {
-            .portfolio-container { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .portfolio-container { grid-template-columns: 1fr; }
-        }
-
-        /* Video Card */
         .video-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
+            position: relative;
+            min-width: 0;
+            background:
+                linear-gradient(180deg, rgba(244, 239, 229, 0.1), rgba(244, 239, 229, 0.045)),
+                var(--panel);
+            border: 1px solid rgba(197, 223, 230, 0.22);
+            border-radius: var(--radius-md);
             overflow: hidden;
-            margin-bottom: var(--spacing-md);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+            box-shadow: 0 16px 46px rgba(0, 0, 0, 0.24);
             cursor: pointer;
+            transform: translateY(0);
+            transition: transform 0.42s var(--ease), box-shadow 0.42s ease, border-color 0.42s ease;
+            isolation: isolate;
+            animation: cardIn 0.62s var(--ease) both;
+        }
+
+        .video-card::before,
+        .video-card::after {
+            content: '';
+            position: absolute;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .video-card::before {
+            inset: 9px;
+            border: 1px solid rgba(196, 214, 77, 0.14);
+            border-radius: var(--radius-sm);
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity 0.32s ease, transform 0.32s var(--ease);
+        }
+
+        .video-card::after {
+            top: 0;
+            right: 24px;
+            width: 42px;
+            height: 7px;
+            background: var(--persimmon);
+            box-shadow: -18px 0 0 var(--cool-blue), 18px 0 0 var(--wasabi);
+            opacity: 0.82;
         }
 
         .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transform: translateY(-7px);
+            border-color: rgba(196, 214, 77, 0.55);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
+        }
+
+        .video-card:hover::before {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .video-wrapper {
             position: relative;
             width: 100%;
-            background-color: #EAE5DE;
+            aspect-ratio: 4 / 5;
+            background:
+                repeating-linear-gradient(90deg, rgba(244, 239, 229, 0.07) 0 1px, transparent 1px 13px),
+                linear-gradient(145deg, rgba(122, 167, 183, 0.2), rgba(20, 11, 23, 0.88));
+            overflow: hidden;
         }
 
-        /* Wrapper 全屏样式 */
         .video-wrapper:fullscreen,
         .video-wrapper:-webkit-full-screen {
             background-color: #000;
@@ -146,7 +382,6 @@
             object-fit: contain;
         }
 
-        /* 全屏时退出按钮固定在右上角 */
         .video-wrapper:fullscreen .fullscreen-btn,
         .video-wrapper:-webkit-full-screen .fullscreen-btn {
             opacity: 1;
@@ -167,7 +402,6 @@
             background-color: rgba(255, 255, 255, 0.4);
         }
 
-        /* 全屏时的透明点击层，覆盖视频画面（不覆盖底部控制条区域） */
         .click-catcher {
             display: none;
             position: absolute;
@@ -185,35 +419,99 @@
             height: 80vh;
         }
 
-        video {
+        video,
+        .cover-image {
             width: 100%;
-            height: auto;
+            height: 100%;
             display: block;
+            object-fit: cover;
+            background: #050508;
+            filter: saturate(1.06) contrast(1.04);
+            transition: filter 0.32s ease, transform 0.52s var(--ease);
         }
-        
+
+        .video-card:hover video,
+        .video-card:hover .cover-image {
+            transform: scale(1.025);
+            filter: saturate(1.18) contrast(1.07);
+        }
+
+        .media-status {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            z-index: 4;
+            max-width: calc(100% - 68px);
+            padding: 6px 9px;
+            border: 1px solid rgba(244, 239, 229, 0.2);
+            border-radius: 999px;
+            background: rgba(20, 11, 23, 0.62);
+            color: rgba(244, 239, 229, 0.78);
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background:
+                linear-gradient(180deg, rgba(20, 11, 23, 0) 48%, rgba(20, 11, 23, 0.54) 100%),
+                repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.055) 0 1px, transparent 1px 6px);
+            opacity: 0.38;
+            mix-blend-mode: screen;
+        }
+
+        .video-card.playing .video-wrapper::before {
+            opacity: 0.12;
+        }
+
         .play-indicator {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            background-color: rgba(255,255,255,0.7);
+            z-index: 3;
+            width: 58px;
+            height: 58px;
+            background:
+                linear-gradient(145deg, rgba(244, 239, 229, 0.94), rgba(197, 223, 230, 0.72));
+            border: 1px solid rgba(255, 255, 255, 0.55);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
+            opacity: 0.9;
+            box-shadow: 0 14px 38px rgba(0, 0, 0, 0.28), 5px 5px 0 rgba(242, 110, 59, 0.72);
+            transition: opacity 0.3s ease, transform 0.3s var(--ease);
             pointer-events: none;
         }
         
         .video-card:hover .play-indicator {
             opacity: 1;
+            transform: translate(-50%, -50%) scale(1.05);
         }
         
         .video-card.playing .play-indicator {
             opacity: 0;
+            transform: translate(-50%, -50%) scale(0.86);
+        }
+
+        .video-card.image-only {
+            cursor: default;
+        }
+
+        .video-card.image-only .play-indicator,
+        .video-card.image-only .fullscreen-btn {
+            display: none;
         }
 
         .play-indicator::after {
@@ -221,98 +519,285 @@
             width: 0;
             height: 0;
             border-style: solid;
-            border-width: 8px 0 8px 14px;
-            border-color: transparent transparent transparent var(--text-primary);
+            border-width: 9px 0 9px 15px;
+            border-color: transparent transparent transparent var(--plum-noir);
             margin-left: 4px;
         }
 
         .fullscreen-btn {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background-color: rgba(0, 0, 0, 0.4);
-            color: white;
+            bottom: 12px;
+            right: 12px;
+            background-color: rgba(20, 11, 23, 0.68);
+            color: var(--porcelain);
             border: none;
-            border-radius: 6px;
-            width: 36px;
-            height: 36px;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.3s ease, background-color 0.2s ease;
-            z-index: 10;
+            transition: opacity 0.3s ease, background-color 0.2s ease, transform 0.2s var(--ease);
+            z-index: 11;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .video-card:hover .fullscreen-btn {
+        .video-card:hover .fullscreen-btn,
+        .video-card.playing .fullscreen-btn {
             opacity: 1;
         }
 
         .fullscreen-btn:hover {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(242, 110, 59, 0.88);
+            transform: scale(1.05);
         }
 
         .card-content {
-            padding: var(--spacing-md);
+            position: relative;
+            z-index: 4;
+            padding: 14px 14px 16px;
         }
 
         .card-title {
-            font-family: var(--font-serif);
-            font-size: 1.2rem;
-            margin: 0 0 var(--spacing-sm);
+            color: var(--porcelain);
+            font-family: var(--font-display);
+            font-size: clamp(1.18rem, 2vw, 1.45rem);
+            font-weight: 600;
+            line-height: 1.05;
+            margin: 0 0 12px;
+            overflow-wrap: anywhere;
         }
 
         .metadata {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: var(--spacing-sm);
+            gap: 10px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 11px;
+            text-transform: uppercase;
+        }
+
+        .metadata span {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .metadata span:first-child::before {
+            content: '';
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            margin-right: 7px;
+            border-radius: 50%;
+            background: var(--jade);
+            box-shadow: 0 0 12px var(--jade);
         }
 
         .tags-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 7px;
+        }
+
+        .card-desc {
+            margin: 12px 0 0;
+            color: rgba(244, 239, 229, 0.62);
+            font-size: 0.82rem;
+            line-height: 1.55;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
         .tag {
-            background-color: var(--tag-bg);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            color: var(--text-primary);
+            max-width: 100%;
+            background: rgba(197, 223, 230, 0.13);
+            border: 1px solid rgba(197, 223, 230, 0.18);
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 650;
+            color: var(--blue-ice);
+            overflow-wrap: anywhere;
+            box-shadow: inset 0 -2px 5px rgba(255, 255, 255, 0.06);
         }
-        
+
+        .tag.tool-tag {
+            background: rgba(196, 214, 77, 0.18);
+            border-color: rgba(196, 214, 77, 0.38);
+            color: var(--wasabi);
+        }
+
+        .status-card {
+            grid-column: 1 / -1;
+            display: grid;
+            place-items: center;
+            min-height: 260px;
+            padding: 30px;
+            border: 1px solid rgba(197, 223, 230, 0.24);
+            border-radius: var(--radius-md);
+            background:
+                linear-gradient(135deg, rgba(244, 239, 229, 0.1), rgba(55, 167, 141, 0.09)),
+                rgba(20, 11, 23, 0.58);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .status-card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--porcelain);
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 5vw, 3rem);
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .status-card span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.96rem;
+        }
+
         .loading-shimmer {
-            animation: shimmer 2s infinite linear;
-            background: linear-gradient(to right, #EAE5DE 4%, #F2EFEA 25%, #EAE5DE 36%);
-            background-size: 1000px 100%;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .loading-shimmer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(100deg, transparent 0 28%, rgba(244, 239, 229, 0.18) 44%, transparent 60% 100%);
+            transform: translateX(-100%);
+            animation: shimmer 1.9s infinite;
+        }
+
         @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 860px) {
+            header {
+                grid-template-columns: 1fr;
+                min-height: 0;
+            }
+
+            header::after {
+                width: 54px;
+                height: 54px;
+                opacity: 0.45;
+            }
+
+            .archive-panel {
+                padding: 14px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .app-shell {
+                padding-bottom: 34px;
+            }
+
+            header h1 {
+                font-size: clamp(2.7rem, 16vw, 4.6rem);
+            }
+
+            .filters {
+                gap: 8px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            .filter-btn {
+                flex: 1 1 auto;
+                min-width: min(148px, 100%);
+                padding-inline: 0.72rem;
+                font-size: 0.84rem;
+            }
+
+            .signal-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
     </style>
 </head>
 <body>
+    <div class="app-shell">
+        <header>
+            <div>
+                <div class="eyebrow">
+                    <span>Lunah / Jinny</span>
+                    <span>AI Motion Portfolio</span>
+                    <span>Feishu Stream Archive</span>
+                </div>
+                <h1>Selected AI Works</h1>
+                <p>梦境、商品、知识和视觉实验的短片索引。点开即看，筛选即重组，给 AI 视频作品留一点冷光、一点玉色和一点故意错位的数字余温。</p>
+            </div>
+            <aside class="archive-panel" aria-label="作品集概览">
+                <h2>Motion index</h2>
+                <p>从飞书视频库自动读取，适合快速预览、归档和给合作方展示。</p>
+                <div class="signal-row">
+                    <div class="signal">
+                        <strong id="work-count">--</strong>
+                        <span>works</span>
+                    </div>
+                    <div class="signal">
+                        <strong id="category-count">--</strong>
+                        <span>types</span>
+                    </div>
+                    <div class="signal">
+                        <strong>AI</strong>
+                        <span>made</span>
+                    </div>
+                </div>
+            </aside>
+        </header>
 
-    <header>
-        <h1>SELECTED WORKS</h1>
-        <p>A curated collection of visual storytelling</p>
-    </header>
+        <main>
+            <div class="filters" id="filters">
+                <button class="filter-btn active" data-filter="all">全部作品</button>
+                <!-- Dynamic filters injected here -->
+            </div>
 
-    <div class="filters" id="filters">
-        <button class="filter-btn active" data-filter="all">全部 (All)</button>
-        <!-- Dynamic filters injected here -->
-    </div>
-
-    <div class="portfolio-container" id="portfolio-grid">
-        <!-- Videos injected here -->
+            <div class="portfolio-container" id="portfolio-grid">
+                <div class="status-card loading-shimmer">
+                    <div>
+                        <strong>Loading archive</strong>
+                        <span>正在读取飞书同步的视频索引...</span>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
@@ -344,13 +829,15 @@
                     }
                 });
 
+                document.getElementById('work-count').textContent = videoData.length;
+                document.getElementById('category-count').textContent = categories.size || 1;
+
                 renderFilters(Array.from(categories));
                 renderGallery(videoData);
 
             } catch (error) {
                 console.error("Failed to load data:", error);
-                const grid = document.getElementById('portfolio-grid');
-                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; margin-top:20px; color:var(--text-secondary);">等待同步数据中... 请确保云端 Action 或本地 refresh 脚本运行一次。</div>';
+                renderStatus('Signal missing', '等待同步数据中... 请确保云端 Action 或本地 refresh 脚本运行一次。');
             }
         }
 
@@ -366,9 +853,31 @@
             return tags;
         }
 
+        function escapeHTML(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }[char]));
+        }
+
+        function renderStatus(title, message) {
+            const grid = document.getElementById('portfolio-grid');
+            grid.innerHTML = `
+                <div class="status-card">
+                    <div>
+                        <strong>${escapeHTML(title)}</strong>
+                        <span>${escapeHTML(message)}</span>
+                    </div>
+                </div>
+            `;
+        }
+
         function renderFilters(categories) {
             const filterContainer = document.getElementById('filters');
-            filterContainer.innerHTML = '<button class="filter-btn active" data-filter="all">全部 (All)</button>'; // Reset
+            filterContainer.innerHTML = '<button class="filter-btn active" data-filter="all">全部作品</button>'; // Reset
             
             categories.forEach(cat => {
                 const btn = document.createElement('button');
@@ -405,52 +914,69 @@
             const grid = document.getElementById('portfolio-grid');
             grid.innerHTML = '';
 
-            items.forEach(item => {
+            if (!items.length) {
+                renderStatus('No works here', '这个筛选下暂时没有作品。换一个类型看看。');
+                return;
+            }
+
+            items.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = 'video-card';
+                card.style.animationDelay = `${Math.min(0.42, index * 0.045)}s`;
                 
                 // Build Tags HTML
                 let tagsHtml = '';
                 const types = extractTags(item['类型']);
                 types.forEach(cat => {
-                    tagsHtml += `<span class="tag">${cat}</span>`;
+                    tagsHtml += `<span class="tag">${escapeHTML(cat)}</span>`;
                 });
                 
                 const aiToolText = extractTags(item['AI工具']).join('');
-                const aiToolHtml = aiToolText ? `<span class="tag" style="background:#5C5855;color:#fff;">${aiToolText}</span>` : '';
+                const aiToolHtml = aiToolText ? `<span class="tag tool-tag">${escapeHTML(aiToolText)}</span>` : '';
                 
                 const titleText = extractTags(item['内容'])[0] || item['内容'] || 'Untitled';
                 const durationText = extractTags(item['时长']).join('') || item['时长'] || '';
+                const videoUrl = item['URL'] || item['视频URL'] || '';
+                const coverUrl = item['封面URL'] || item['封面'] || item['Cover'] || '';
+                const descriptionText = extractTags(item['说明']).join('') || item['说明'] || '';
+                const hasVideo = Boolean(videoUrl);
+                card.className = `video-card${hasVideo ? '' : ' image-only'}`;
+                const mediaHtml = hasVideo
+                    ? `<video loop playsinline controlsList="nodownload" preload="metadata"${coverUrl ? ` poster="${escapeHTML(coverUrl)}"` : ''}></video>`
+                    : `<img class="cover-image" src="${escapeHTML(coverUrl)}" alt="${escapeHTML(titleText)}">`;
 
-                // We no longer need shimmer because the URL is already here
                 card.innerHTML = `
                     <div class="video-wrapper">
-                        <!-- Video element -->
-                        <video loop playsinline controlsList="nodownload" preload="metadata"></video>
+                        ${mediaHtml}
                         <div class="click-catcher"></div>
                         <div class="play-indicator"></div>
                         <button class="fullscreen-btn" aria-label="全屏播放" title="全屏观看">
                             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
                         </button>
+                        <div class="media-status">${hasVideo ? 'motion sample' : 'case preview'}</div>
                     </div>
                     <div class="card-content">
-                        <h3 class="card-title">${titleText}</h3>
+                        <h3 class="card-title">${escapeHTML(titleText)}</h3>
                         <div class="metadata">
-                            <span>${durationText}</span>
+                            <span>${escapeHTML(durationText || 'preview')}</span>
                         </div>
                         <div class="tags-container">
                             ${tagsHtml}
                             ${aiToolHtml}
                         </div>
+                        ${descriptionText ? `<p class="card-desc">${escapeHTML(descriptionText)}</p>` : ''}
                     </div>
                 `;
 
-                // Set src instantly with metadata frame hack
                 const video = card.querySelector('video');
                 const fsBtn = card.querySelector('.fullscreen-btn');
                 
-                if (item['URL']) {
-                    video.src = item['URL'] + '#t=0.001';
+                if (!hasVideo || !video) {
+                    grid.appendChild(card);
+                    return;
+                }
+
+                if (videoUrl) {
+                    video.src = videoUrl + '#t=0.001';
                 }
 
                 // 监听原生 play / pause 事件，以保证任何途径触发的播放暂停都能同步 UI 状态

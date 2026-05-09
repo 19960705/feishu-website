@@ -1,66 +1,232 @@
 [
   {
-    "内容": "绍菜",
-    "序号": 10.0,
-    "类型": "创意动画",
-    "时长": "7秒",
-    "AI工具": "veo3",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=NjhiNjM2OGMwNTA1M2I0N2U4YTg5NGE2YjRmMDg2ZDBfZjBiMDcyY2JmMjI3ODMyZjkyMDNlMjcxODM5ZmUxZTFfSUQ6NzYyNTYwMjY1ODcxMTI0MzczNl8xNzc4Mjg2MjQ1OjE3NzgzNzI2NDVfVjM"
+    "内容": "游戏视频作品 2",
+    "序号": 1,
+    "类型": "AI视频作品",
+    "时长": "01:06",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "个人作品里的游戏向动态演示，保留原始视频作为样片。",
+    "封面URL": "./assets/covers/01-游戏视频作品-2.jpg",
+    "URL": "./assets/videos/01-游戏视频作品-2.mp4"
   },
   {
-    "内容": "芥菜",
-    "序号": 20.0,
-    "类型": "创意动画",
-    "时长": "7秒",
-    "AI工具": "veo3",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=OTY4YTc4YmQ1ODJjZGNlYWVjOGFhZGQ5MzFkODU5NGRfNTY0MWM1MTMzY2YyMDkzZmRiODI2ZWE3ZmQwN2FlZDRfSUQ6NzYyNTYwMjgzNzgwODE1NTYwOV8xNzc4Mjg2MjQ1OjE3NzgzNzI2NDVfVjM"
+    "内容": "GBL V3.0 游戏/视觉演示",
+    "序号": 2,
+    "类型": "AI视频作品",
+    "时长": "00:31",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "本地个人作品集中较完整的一条游戏/视觉演示视频，适合放在作品集里作为动态样片。",
+    "封面URL": "./assets/covers/02-GBL-V3-0-游戏-视觉演示.jpg",
+    "URL": "./assets/videos/02-GBL-V3-0-游戏-视觉演示.mp4"
   },
   {
-    "内容": "苋菜",
-    "序号": 30.0,
-    "类型": "创意动画",
-    "时长": "7秒",
-    "AI工具": "veo3",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=YTA3YzQzZTI1OTBmMTFlM2RlMjdmZGFlZmYxZDIwNzNfOTBmNmZhMzY0NDFjNDAxOTA4N2JhZGZjMDI0NjdkMmZfSUQ6NzYyNTYwMjk4NjExODcyODkyM18xNzc4Mjg2MjQ1OjE3NzgzNzI2NDVfVjM"
+    "内容": "4月22日 AI视频作品",
+    "序号": 3,
+    "类型": "AI视频作品",
+    "时长": "00:31",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "4月下旬生成/剪辑的个人视频作品，保留为作品集样片。",
+    "封面URL": "./assets/covers/03-4月22日-AI视频作品.jpg",
+    "URL": "./assets/videos/03-4月22日-AI视频作品.mp4"
   },
   {
-    "内容": "毛瓜",
-    "序号": 40.0,
-    "类型": "创意动画",
-    "时长": "7秒",
-    "AI工具": "veo3.1",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=ZTRlMjlmYTVjNzc0NjlhM2ZlNDkxYWQ1OTgwYmI5MWVfMmRkMzJhMDBhNzk0YmI0ZDIxY2FiMTQ5ZDYyNGM4OThfSUQ6NzYyNTYwMzc3MjQwMzk3NzE2NV8xNzc4Mjg2MjQ1OjE3NzgzNzI2NDVfVjM"
+    "内容": "游戏视频作品 2-2",
+    "序号": 4,
+    "类型": "AI视频作品",
+    "时长": "01:35",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "游戏向动态演示的另一版成片，可用于对比迭代效果。",
+    "封面URL": "./assets/covers/04-游戏视频作品-2-2.jpg",
+    "URL": "./assets/videos/04-游戏视频作品-2-2.mp4"
   },
   {
-    "内容": "韭菜",
-    "序号": 50.0,
-    "类型": "创意动画",
-    "时长": "7秒",
-    "AI工具": "veo3.1",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=OTAzNTc5MzAyNGVmYzE3ZTY0ZDIxOGRlMTZkNTIxOGZfYzQ5ODQ3YWRhYzJiZjkxZDE4ZTMzNGI2YjZiZGNhMzNfSUQ6NzYyNTYxNzQzMzg0MDEyNjkyN18xNzc4Mjg2MjQ1OjE3NzgzNzI2NDVfVjM"
+    "内容": "4月23日 AI视频作品",
+    "序号": 5,
+    "类型": "AI视频作品",
+    "时长": "00:51",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "4月下旬生成/剪辑的个人视频作品，保留为作品集样片。",
+    "封面URL": "./assets/covers/05-4月23日-AI视频作品.jpg",
+    "URL": "./assets/videos/05-4月23日-AI视频作品.mp4"
   },
   {
-    "内容": "胡萝卜",
-    "序号": 60.0,
-    "类型": "创意动画",
-    "时长": "7秒",
-    "AI工具": "veo3",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=YjBmODZiZjY1YjBkMmM0OTE4YzRmMmEzMTBkMWE3MGRfZGFhZjY5NGNiY2YzNjEwYzFiNzM1NWU3NzAyOWNkOGNfSUQ6NzYyNTgzODU1ODM2ODg5NDE1MV8xNzc4Mjg2MjQ2OjE3NzgzNzI2NDZfVjM"
+    "内容": "mmexport1778295133636",
+    "序号": 6,
+    "类型": "AI视频作品",
+    "时长": "00:15",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/06-mmexport1778295133636.jpg",
+    "URL": "./assets/videos/06-mmexport1778295133636.mp4"
   },
   {
-    "内容": "如何用 YouTube 学英语：终极路线",
-    "序号": 70.0,
-    "类型": "讲解",
-    "时长": "9分29秒",
-    "AI工具": "NotebookLM",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=NWYwNzJjNmI1MTEzOGU2OGI3YzM3YjBmYjZmODliZTNfMDM4MjBkZjE4YTE5YWZjN2Y5NTBkZWFiMzZlMTc2MDNfSUQ6NzYyNTg0MTcxMTEwOTY4ODI2NV8xNzc4Mjg2MjQ2OjE3NzgzNzI2NDZfVjM"
+    "内容": "mmexport1778295139688",
+    "序号": 7,
+    "类型": "AI视频作品",
+    "时长": "00:15",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/07-mmexport1778295139688.jpg",
+    "URL": "./assets/videos/07-mmexport1778295139688.mp4"
   },
   {
-    "内容": "AI的下一次飞跃：理解Agent_Skills",
-    "序号": 80.0,
-    "类型": "讲解",
-    "时长": "4分55秒",
-    "AI工具": "NotebookLM",
-    "URL": "https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=ZjdhZDVmNjg1MDBlNzNhYjQ2OGUwNGRjZmY4OTI0MzJfMjBlZjEzMmFiOGJiNDkyYTYwMGRiYWQ2NzEzODYwNmFfSUQ6NzYyNTkwMTMwOTUyNjU0MzU3OF8xNzc4Mjg2MjQ2OjE3NzgzNzI2NDZfVjM"
+    "内容": "mmexport1778295127814",
+    "序号": 8,
+    "类型": "AI视频作品",
+    "时长": "00:15",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/08-mmexport1778295127814.jpg",
+    "URL": "./assets/videos/08-mmexport1778295127814.mp4"
+  },
+  {
+    "内容": "mmexport1778295148194",
+    "序号": 9,
+    "类型": "AI视频作品",
+    "时长": "00:15",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/09-mmexport1778295148194.jpg",
+    "URL": "./assets/videos/09-mmexport1778295148194.mp4"
+  },
+  {
+    "内容": "mmexport1778295153577",
+    "序号": 10,
+    "类型": "AI视频作品",
+    "时长": "00:30",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/10-mmexport1778295153577.jpg",
+    "URL": "./assets/videos/10-mmexport1778295153577.mp4"
+  },
+  {
+    "内容": "mmexport1778295162129",
+    "序号": 11,
+    "类型": "AI视频作品",
+    "时长": "00:30",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/11-mmexport1778295162129.jpg",
+    "URL": "./assets/videos/11-mmexport1778295162129.mp4"
+  },
+  {
+    "内容": "mmexport1778295143514",
+    "序号": 12,
+    "类型": "AI视频作品",
+    "时长": "01:38",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/12-mmexport1778295143514.jpg",
+    "URL": "./assets/videos/12-mmexport1778295143514.mp4"
+  },
+  {
+    "内容": "mmexport1778295158053",
+    "序号": 13,
+    "类型": "AI视频作品",
+    "时长": "00:30",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/13-mmexport1778295158053.jpg",
+    "URL": "./assets/videos/13-mmexport1778295158053.mp4"
+  },
+  {
+    "内容": "mmexport1778295342610",
+    "序号": 14,
+    "类型": "AI视频作品",
+    "时长": "00:51",
+    "AI工具": "本地剪辑 / AI 视频工作流",
+    "说明": "从 Downloads/个人作品 收集的个人视频作品，已自动抽取封面，原始 MP4 可作为飞书附件上传。",
+    "封面URL": "./assets/covers/14-mmexport1778295342610.jpg",
+    "URL": "./assets/videos/14-mmexport1778295342610.mp4"
+  },
+  {
+    "内容": "幻瞳 · 雾花境",
+    "序号": 15,
+    "类型": "互动展示站",
+    "时长": "",
+    "AI工具": "Canvas / Creative Site",
+    "说明": "把“见猫非猫，入梦非梦”的创意文档做成沉浸式静态网站，用 Canvas 雾场、交互按钮和诗性文案承载世界观。",
+    "封面URL": "./assets/covers/15-幻瞳-雾花境.png",
+    "URL": ""
+  },
+  {
+    "内容": "芯径 · 太虚幻境",
+    "序号": 16,
+    "类型": "浏览器游戏",
+    "时长": "",
+    "AI工具": "Phaser / Three.js / Vite",
+    "说明": "基于红楼梦框架的 2D 游戏原型，包含寻路、掷骰、梦节点、五心系统和终局判词，把文学结构转成玩法系统。",
+    "封面URL": "./assets/covers/16-芯径-太虚幻境.png",
+    "URL": ""
+  },
+  {
+    "内容": "鮀城来信",
+    "序号": 17,
+    "类型": "文旅 RPG",
+    "时长": "",
+    "AI工具": "RPG / 汕头文旅 / Web",
+    "说明": "以汕头文旅为主题的 2D RPG 城市漫游解谜原型，从小公园、南澳、侨批和潮汕文化里抽出任务线。",
+    "封面URL": "./assets/covers/17-鮀城来信.png",
+    "URL": ""
+  },
+  {
+    "内容": "红楼梦 · 十梦卡牌馆",
+    "序号": 18,
+    "类型": "互动卡牌展",
+    "时长": "",
+    "AI工具": "3D Card Gallery / Literary IP",
+    "说明": "基于十张 9:16 红楼梦海报制作的互动展示网站，包含 3D 卡牌、命运模式、诗笺视图与梦境时间线。",
+    "封面URL": "./assets/covers/18-红楼梦-十梦卡牌馆.jpg",
+    "URL": ""
+  },
+  {
+    "内容": "看见家务",
+    "序号": 19,
+    "类型": "产品工具原型",
+    "时长": "",
+    "AI工具": "Capacitor / Android / Web App",
+    "说明": "面向有娃职业妈妈的家庭隐形劳动审计 App，支持速记拆解、成本评分、周报生成和 Android 打包路径。",
+    "封面URL": "./assets/covers/19-看见家务.png",
+    "URL": ""
+  },
+  {
+    "内容": "商品图内容增长工具",
+    "序号": 20,
+    "类型": "电商 AI 工具",
+    "时长": "",
+    "AI工具": "TikTok Shop / React / 泰语转化",
+    "说明": "面向 TikTok Shop 泰国站的本地 React Demo，生成商品主图方案、详情页前三张、短视频脚本、泰语标题和复盘建议。",
+    "封面URL": "./assets/covers/20-商品图内容增长工具.png",
+    "URL": ""
+  },
+  {
+    "内容": "Claude Design Studio",
+    "序号": 21,
+    "类型": "设计工作台",
+    "时长": "",
+    "AI工具": "Local Design Studio / Export",
+    "说明": "本地设计工作台原型，支持项目侧栏、分区画布、主题调参、评论、JSON/HTML 导出。",
+    "封面URL": "./assets/covers/21-Claude-Design-Studio.png",
+    "URL": ""
+  },
+  {
+    "内容": "奶油梦境与瓷意",
+    "序号": 22,
+    "类型": "游戏资产页面",
+    "时长": "",
+    "AI工具": "Game Assets / Art Direction",
+    "说明": "把糖霜、冷瓷、香缇丽绸缎抽象成一套幻想游戏资产语言，展示角色、生物、道具、UI 和材质系统。",
+    "封面URL": "./assets/covers/22-奶油梦境与瓷意.png",
+    "URL": ""
+  },
+  {
+    "内容": "Agent Sprite Forge",
+    "序号": 23,
+    "类型": "2D 资产生成工作流",
+    "时长": "",
+    "AI工具": "Sprite / 2D Map / Codex",
+    "说明": "围绕 Codex 的 2D 精灵与地图生成工作流，把自然语言需求转成透明 sprite、GIF、地图和 playable prototype。",
+    "封面URL": "./assets/covers/23-Agent-Sprite-Forge.png",
+    "URL": ""
   }
 ]
